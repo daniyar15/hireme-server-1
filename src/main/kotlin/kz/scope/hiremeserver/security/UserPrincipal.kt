@@ -10,7 +10,7 @@ import java.util.stream.Collectors
 
 data class UserPrincipal(
     val id: Long,
-    val name: String?,
+    val fullname: String,
     private val username: String,
     @field:JsonIgnore
     val email: String,
@@ -68,7 +68,7 @@ data class UserPrincipal(
 
             return UserPrincipal(
                 user.id,
-                user.name,
+                user.fullname,
                 user.username,
                 user.email,
                 user.password,

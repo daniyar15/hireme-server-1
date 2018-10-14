@@ -21,13 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 /**
- * Created by rajeevkumarsingh on 01/08/17.
+ * Created by scope team on 01/08/17.
  */
 
 @Configuration
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
-open class SecurityConfig : WebSecurityConfigurerAdapter() {
+class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var customUserDetailsService: CustomUserDetailsService
 
@@ -35,7 +35,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     lateinit var unauthorizedHandler: JwtAuthenticationEntryPoint
 
     @Bean
-    open fun jwtAuthenticationFilter(): JwtAuthenticationFilter {
+    fun jwtAuthenticationFilter(): JwtAuthenticationFilter {
         return JwtAuthenticationFilter()
     }
 
@@ -53,7 +53,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    open fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
     }
 

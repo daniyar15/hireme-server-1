@@ -9,14 +9,14 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
 /**
- * Created by rajeevkumarsingh on 01/08/17.
+ * Created by scope team on 01/08/17.
  */
 
 @Entity
 @Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("username")), UniqueConstraint(columnNames = arrayOf("email"))])
 class User() : DateAudit() {
-    constructor(name: String, username: String, email: String, password: String) : this() {
-        this.name = name
+    constructor(fullname: String, username: String, email: String, password: String) : this() {
+        this.fullname = fullname
         this.username = username
         this.email = email
         this.password = password
@@ -28,7 +28,7 @@ class User() : DateAudit() {
 
     @NotBlank
     @Size(max = 40)
-    var name: String? = null
+    lateinit var fullname: String
 
     @NotBlank
     @Size(max = 15)

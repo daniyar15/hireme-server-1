@@ -25,11 +25,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.validation.Valid
 
 /**
- * Created by rajeevkumarsingh on 02/08/17.
+ * Created by scope team on 02/08/17.
  */
 @RestController
 @RequestMapping("/api/auth")
-open class AuthController {
+class AuthController {
 
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
@@ -75,7 +75,7 @@ open class AuthController {
         }
 
         // Creating user's account
-        val user = User(signUpRequest.name, signUpRequest.username,
+        val user = User(signUpRequest.fullname, signUpRequest.username,
             signUpRequest.email, signUpRequest.password)
 
         user.password = passwordEncoder.encode(user.password)

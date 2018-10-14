@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
- * Created by rajeevkumarsingh on 07/12/17.
+ * Created by scope team on 07/12/17.
  */
 @Component
 class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {

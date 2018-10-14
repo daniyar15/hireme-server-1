@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
- * Created by rajeevkumarsingh on 19/08/17.
+ * Created by scope team on 19/08/17.
  */
 private val logger1 = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
 

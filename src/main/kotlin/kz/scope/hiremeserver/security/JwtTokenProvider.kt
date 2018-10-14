@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 /**
- * Created by rajeevkumarsingh on 19/08/17.
+ * Created by scope team on 19/08/17.
  */
 @Component
 class JwtTokenProvider {
