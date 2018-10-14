@@ -4,7 +4,9 @@ import kz.scope.hiremeserver.model.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
-
+/**
+ * Created by scope team on 02/08/17.
+ */
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?

@@ -7,18 +7,20 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.util.*
 
-private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java)
-
+/**
+ * Created by scope team on 19/08/17.
+ */
 @Component
-public class JwtTokenProvider {
+class JwtTokenProvider {
 
     @Value("\${app.jwtSecret}")
-    private val jwtSecret: String? = null
+    lateinit var jwtSecret: String
 
     @Value("\${app.jwtExpirationInMs}")
     private val jwtExpirationInMs: Int = 0
 
     fun generateToken(authentication: Authentication): String {
+
         val userPrincipal = authentication.principal as UserPrincipal
 
         val now = Date()
@@ -58,5 +60,10 @@ public class JwtTokenProvider {
         }
 
         return false
+    }
+
+    companion object {
+
+        private val logger = LoggerFactory.getLogger(JwtTokenProvider::class.java)
     }
 }

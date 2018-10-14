@@ -14,7 +14,9 @@ import java.util.*
 class AuditingConfig {
 
     @Bean
-    fun auditorProvider(): AuditorAware<Long> = SpringSecurityAuditAwareImpl()
+    fun auditorProvider(): AuditorAware<Long> {
+        return SpringSecurityAuditAwareImpl()
+    }
 }
 
 internal class SpringSecurityAuditAwareImpl : AuditorAware<Long> {
