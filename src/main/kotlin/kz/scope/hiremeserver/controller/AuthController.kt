@@ -24,9 +24,12 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.validation.Valid
 
+/**
+ * Created by rajeevkumarsingh on 02/08/17.
+ */
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+open class AuthController {
 
     @Autowired
     lateinit var authenticationManager: AuthenticationManager
@@ -45,6 +48,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<*> {
+
         val authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 loginRequest.usernameOrEmail,
@@ -70,24 +74,21 @@ public class AuthController {
                 HttpStatus.BAD_REQUEST)
         }
 
-        if (!signUpRequest.email.endsWith("@nu.edu.kz")) {
-            return ResponseEntity(ApiResponse(false, "Use NU email"),
-                HttpStatus.BAD_REQUEST)
-        }
         // Creating user's account
         val user = User(signUpRequest.name, signUpRequest.username,
             signUpRequest.email, signUpRequest.password)
 
         user.password = passwordEncoder.encode(user.password)
 
-        val userRole = roleRepository.findByName(RoleName.ROLE_USER) ?: throw AppException("User Role not set.")
+        val userRole = roleRepository.findByName(RoleName.ROLE_USER)
+            .orElseThrow { AppException("User Role not set.") }
 
         user.roles = setOf(userRole)
 
         val result = userRepository.save(user)
 
         val location = ServletUriComponentsBuilder
-            .fromCurrentContextPath().path("/api/users/{username}")
+            .fromCurrentContextPath().path("/users/{username}")
             .buildAndExpand(result.username).toUri()
 
         return ResponseEntity.created(location).body(ApiResponse(true, "User registered successfully"))

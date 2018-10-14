@@ -6,7 +6,6 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.io.Serializable
 import java.time.Instant
-import javax.persistence.Column
 import javax.persistence.EntityListeners
 import javax.persistence.MappedSuperclass
 
@@ -16,11 +15,9 @@ import javax.persistence.MappedSuperclass
 abstract class DateAudit : Serializable {
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    var createdAt: Instant? = null
+    lateinit var createdAt: Instant
 
     @LastModifiedDate
-    @Column(nullable = false)
-    var updatedAt: Instant? = null
-}
+    lateinit var updatedAt: Instant
 
+}

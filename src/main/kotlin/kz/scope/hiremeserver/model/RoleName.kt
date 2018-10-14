@@ -1,6 +1,9 @@
 package kz.scope.hiremeserver.model
 
-public enum class RoleName {
+/**
+ * Created by rajeevkumarsingh on 07/12/17.
+ */
+enum class RoleName {
     ROLE_USER,
     ROLE_ADMIN
 }

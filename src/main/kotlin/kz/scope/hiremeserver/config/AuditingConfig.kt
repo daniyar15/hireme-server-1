@@ -11,10 +11,12 @@ import java.util.*
 
 @Configuration
 @EnableJpaAuditing
-class AuditingConfig {
+open class AuditingConfig {
 
     @Bean
-    fun auditorProvider(): AuditorAware<Long> = SpringSecurityAuditAwareImpl()
+    open fun auditorProvider(): AuditorAware<Long> {
+        return SpringSecurityAuditAwareImpl()
+    }
 }
 
 internal class SpringSecurityAuditAwareImpl : AuditorAware<Long> {

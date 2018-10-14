@@ -1,9 +1,14 @@
 package kz.scope.hiremeserver.payload
 
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
-public data class SignUpRequest(
+/**
+ * Created by rajeevkumarsingh on 02/08/17.
+ */
+
+data class SignUpRequest(
     @NotBlank
     @Size(min = 4, max = 40)
     var name: String,
@@ -14,6 +19,7 @@ public data class SignUpRequest(
 
     @NotBlank
     @Size(max = 40)
+    @Email
     var email: String,
 
     @NotBlank
