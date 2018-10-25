@@ -7,13 +7,14 @@ import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
+import kotlin.collections.ArrayList
 
 /**
  * Created by scope team on 01/08/17.
  */
 
 @Entity
-@Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("username")), UniqueConstraint(columnNames = arrayOf("email"))])
+@Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = ["username"]), UniqueConstraint(columnNames = ["email"])])
 class User() : DateAudit() {
     constructor(fullname: String, username: String, email: String, password: String) : this() {
         this.fullname = fullname
@@ -48,4 +49,6 @@ class User() : DateAudit() {
     @JoinTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")], inverseJoinColumns = [JoinColumn(name = "role_id")])
     var roles: Set<Role> = HashSet()
 
+    @OneToMany(mappedBy = "user")
+    var employerInfos: List<EmployerInfo> = ArrayList()
 }
