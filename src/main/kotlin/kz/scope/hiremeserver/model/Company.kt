@@ -1,5 +1,6 @@
 package kz.scope.hiremeserver.model
 
+import jdk.nashorn.internal.codegen.ApplySpecialization
 import kz.scope.hiremeserver.model.EmployerInfo
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -8,10 +9,15 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name="company")
 class Company() {
-    constructor(manager: EmployerInfo, name: String, location: String) : this() {
+    constructor(manager: EmployerInfo, name: String, location: String,
+                logo: String, numEmployees: Int, specialization: String, description: String) : this() {
         this.manager = manager
         this.name = name
         this.location = name
+        this.logo = logo
+        this.numEmployees = numEmployees
+        this.specialization = specialization
+        this.description = description
     }
 
     @Id
@@ -29,4 +35,10 @@ class Company() {
     @NotBlank
     @Size(max = 100)
     lateinit var location: String
+
+    lateinit var logo: String
+
+    var numEmployees: Int = 0
+    lateinit var specialization: String
+    lateinit var description: String
 }
