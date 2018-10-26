@@ -3,10 +3,8 @@ package kz.scope.hiremeserver.controller
 import kz.scope.hiremeserver.exception.AppException
 import kz.scope.hiremeserver.model.RoleName
 import kz.scope.hiremeserver.model.User
-import kz.scope.hiremeserver.payload.ApiResponse
-import kz.scope.hiremeserver.payload.JwtAuthenticationResponse
-import kz.scope.hiremeserver.payload.LoginRequest
-import kz.scope.hiremeserver.payload.SignUpRequest
+import kz.scope.hiremeserver.model.UserInfo
+import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.RoleRepository
 import kz.scope.hiremeserver.repository.UserRepository
 import kz.scope.hiremeserver.security.JwtTokenProvider
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.time.Instant
 import javax.validation.Valid
 
 /**
@@ -84,6 +83,10 @@ class AuthController {
             .orElseThrow { AppException("User Role not set.") }
 
         user.roles = setOf(userRole)
+
+        user.userInfo = UserInfo(StudentProfile(0, "", "", "",
+                false, "", "", "", "",
+                true, "", "", ""))
 
         val result = userRepository.save(user)
 
