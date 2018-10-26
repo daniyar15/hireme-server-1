@@ -70,14 +70,12 @@ class UserController {
     fun getCurrentUserProfile(@CurrentUser currentStudent: UserPrincipal) : StudentProfile{
         val student = userInfoRepository.findByUsername(currentStudent.username)
         if (student != null) {
-            return StudentProfile(student.id, student.username, student.fullname, student.email,
-                    student.sOrGrad, student.location, student.fields, student.education, student.degree,
-                    student.display, student.jobType, student.roleSpecification, student.skillSet)
+            return StudentProfile(student.id, student.username, student.fullname,/* student.email,*/
+                    /*student.sOrGrad,*/ student.location, student.employment_position, student.employment_company/*, student.fields, student.education, student.degree,
+                    student.display, student.jobType, student.roleSpecification, student.skillSet*/)
         }else{
 
-            return StudentProfile(0, "No", "Such", "User",
-                    false, "", "", "", "",
-                    true, "", "", "")
+            return StudentProfile(0, "No", "way", "", "", "")
         }
     }
 
@@ -96,9 +94,9 @@ class UserController {
     @GetMapping("/users/{username}")
     fun getUserProfile(@PathVariable(value = "username") username: String): StudentProfile {
         val userInfo = userInfoRepository.findByUsername(username)
-            ?: throw ResourceNotFoundException("User", "username", username)
-        return StudentProfile(userInfo.id, userInfo.username, userInfo.fullname, userInfo.email, userInfo.sOrGrad,
-                userInfo.location, userInfo.fields, userInfo.education, userInfo.degree, userInfo.display, userInfo.jobType,
-                userInfo.roleSpecification, userInfo.skillSet)
+            ?: throw ResourceNotFoundException("Profile", "username", username)
+        return StudentProfile(userInfo.id, userInfo.username, userInfo.fullname, /*userInfo.email, userInfo.sOrGrad,*/
+                userInfo.location, userInfo.employment_position, userInfo.employment_company/*userInfo.fields, userInfo.education, userInfo.degree, userInfo.display, userInfo.jobType,
+                userInfo.roleSpecification, userInfo.skillSet*/)
     }
 }
