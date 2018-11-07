@@ -1,13 +1,15 @@
 package kz.scope.hiremeserver.payload
 
-import jdk.nashorn.internal.codegen.ApplySpecialization
+import java.util.*
 
 data class CompanyProfile(
+        var id: Long,
         var name: String,
+        var creator: CompanyCreator,
+        var logo_url: String,
         var location: String,
-        var logo: String,
-        var numEmployees: Int,
+        var employee_number: Int,
         var specialization: String,
         var description: String,
-        var managerName: String
+        var createdAt: Date
 )

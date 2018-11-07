@@ -16,7 +16,7 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "users", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("username")), UniqueConstraint(columnNames = arrayOf("email"))])
-open class User() : DateAudit() {
+class User() : DateAudit() {
     constructor(fullname: String, username: String, email: String, password: String) : this() {
         this.fullname = fullname
         this.username = username

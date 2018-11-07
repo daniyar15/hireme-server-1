@@ -36,11 +36,11 @@ You can change it in [application.properties](src/main/resources/application.pro
 
 `/api/company`
 
-| Method | Path              | Request                             | Response                 | Protected |
-| :----: | :---------------- | ----------------------------------- | ------------------------ | :-------: |
-|  POST  | `/company`        | RequestBody: <br>_CompanyInfo_      | `{success, message, id}` |    Yes    |
-|   GET  | `/companies/{id}` | PathVariable: <br>`{id}`            | _CompanyInfo_            |     No    |
-|   GET  | `/companies/find` | RequestBody: <br>`{name, location}` | _CompanyInfo_            |     No    |
+| Method | Path              | Request                             | Response                   | Protected |
+| :----: | :---------------- | ----------------------------------- | -------------------------- | :-------: |
+|  POST  | `/company`        | RequestBody: <br>_CompanyInfo_      | `{success, message, id}`   |    Yes    |
+|   GET  | `/companies/{id}` | PathVariable: <br>`{id}`            | _CompanyInfo_              |     No    |
+|   GET  | `/companies/find` | RequestBody: <br>`{name, location}` | [_CompanyInfo_]            |     No    |
 
 ```js
 UserInfo = {
