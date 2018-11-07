@@ -2,6 +2,7 @@ package kz.scope.hiremeserver.model
 
 import jdk.nashorn.internal.codegen.ApplySpecialization
 import kz.scope.hiremeserver.model.EmployerInfo
+import kz.scope.hiremeserver.model.audit.DateAudit
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -9,9 +10,9 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name="company")
-class Company() {
+class Company() : DateAudit() {
     constructor(manager: EmployerInfo, name: String, location: String,
-                logo: String, numEmployees: Int, specialization: String, description: String, createdAt: Date) : this() {
+                logo: String, numEmployees: Int, specialization: String, description: String) : this() {
         this.manager = manager
         this.name = name
         this.location = location
@@ -19,7 +20,6 @@ class Company() {
         this.numEmployees = numEmployees
         this.specialization = specialization
         this.description = description
-        this.createdAt = createdAt
     }
 
     @Id
@@ -30,7 +30,7 @@ class Company() {
     @Size(max = 40)
     lateinit var name: String
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employer_info_id")
     lateinit var manager: EmployerInfo
 
@@ -43,5 +43,4 @@ class Company() {
     var numEmployees: Int = 0
     lateinit var specialization: String
     lateinit var description: String
-    lateinit var createdAt: Date
 }

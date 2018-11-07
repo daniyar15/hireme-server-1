@@ -25,7 +25,7 @@ class User() : DateAudit() {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 
     @NotBlank
@@ -47,11 +47,14 @@ class User() : DateAudit() {
     lateinit var password: String
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_profiles", joinColumns = [JoinColumn(name = "user_id")], inverseJoinColumns = [JoinColumn(name = "profile_id")])
+    @JoinColumn(name = "userinfo_id")
     lateinit var userInfo: UserInfo
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")], inverseJoinColumns = [JoinColumn(name = "role_id")])
     var roles: Set<Role> = HashSet()
+
+    @OneToMany(mappedBy = "user")
+    var managing: MutableList<EmployerInfo> = ArrayList<EmployerInfo>()
 
 }

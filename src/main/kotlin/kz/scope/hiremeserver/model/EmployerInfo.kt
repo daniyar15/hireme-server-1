@@ -24,7 +24,7 @@ class EmployerInfo() {
     @JoinColumn(name = "user_id")
     lateinit var user: User
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "manager")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "manager")
     lateinit var company: Company
 
 

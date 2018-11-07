@@ -1,5 +1,6 @@
 package kz.scope.hiremeserver.payload
 
+import java.time.Instant
 import java.util.*
 
 data class CompanyProfile(
@@ -11,5 +12,5 @@ data class CompanyProfile(
         var employee_number: Int,
         var specialization: String,
         var description: String,
-        var createdAt: Date
+        var createdAt: Instant
 )
