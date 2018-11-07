@@ -18,25 +18,24 @@ import javax.validation.constraints.Size
  */
 
 @Entity
-@Table(name = "userInfo", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("username")), UniqueConstraint(columnNames = arrayOf("email"))])
+@Table(name = "userInfo", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("id"))])
 class UserInfo(student: StudentProfile) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 
-    var username: String = ""
-
-    var fullname: String = ""
-
-    //city name
     var location : String = ""
 
-    var employment: Employment
+    var position : String = ""
+    var company : String = ""
 
     var current_role: String = ""
 
-    //University, major etc
-    var education : Education
+    var university : String = ""
+    var graduationYear : String = ""
+    var graduationMonth : String = ""
+    var major : String = ""
+    var degree : String = ""
 
     //keep info private - false, public - true
     var hidden : Boolean = false
@@ -52,11 +51,14 @@ class UserInfo(student: StudentProfile) {
 
 
     init {
-        this.username= student.username
-        this.fullname= student.fullname
         this.location = student.location
-        this.employment = student.employment
-        this.education = student.education
+        this.position = student.employment.position
+        this.company = student.employment.company
+        this.university = student.education.university
+        this.graduationYear = student.education.graduation_year
+        this.graduationMonth = student.education.graduation_month
+        this.major = student.education.major
+        this.degree = student.education.degree
         this.skills = student.skills
         this.hidden = student.hidden
         this.current_role = student.current_role

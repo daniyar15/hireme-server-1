@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.time.Instant
+import java.util.*
 
 private val logger1 = LoggerFactory.getLogger(UserController::class.java)
 
@@ -65,17 +66,30 @@ class UserController {
     @GetMapping("/user/me/profile")
     @PreAuthorize("hasRole('USER')")
     fun getCurrentUserProfile(@CurrentUser currentStudent: UserPrincipal) : StudentProfile{
-        val student = userInfoRepository.findByUsername(currentStudent.username)
+        val student = userRepository.findByUsername(currentStudent.username)
         if (student != null) {
-            return StudentProfile(student.username, student.fullname, student.location,
-                    student.employment, student.current_role, student.education, student.hidden, student.job_type,
-                    student.job_field, student.skills)
-        }else{
-
-            return StudentProfile("No", "such", "user", Employment("", ""),
-                    "", Education("", "", "", "", ""),
-                    false, "", "", "")
-        }
+            return StudentProfile(
+                    student.username,
+                    student.fullname,
+                    student.userInfo.location,
+                    Employment(
+                            student.userInfo.position,
+                            student.userInfo.company),
+                    student.userInfo.current_role,
+                    Education(
+                            student.userInfo.university,
+                            student.userInfo.graduationYear,
+                            student.userInfo.graduationMonth,
+                            student.userInfo.major,
+                            student.userInfo.degree),
+                    student.userInfo.hidden,
+                    student.userInfo.job_type,
+                    student.userInfo.job_field,
+                    student.userInfo.skills)
+                return StudentProfile("No", "", "userInfo", Employment("", ""),
+                        "", Education("", "", "", "", ""),
+                        false, "", "", "")
+        }else throw ResourceNotFoundException("Profile", "username", currentStudent.username)
     }
 
     @GetMapping("/user/checkUsernameAvailability")
@@ -92,11 +106,27 @@ class UserController {
 
     @GetMapping("/users/{username}")
     fun getUserProfile(@PathVariable(value = "username") username: String): StudentProfile {
-        val userInfo = userInfoRepository.findByUsername(username)
-            ?: throw ResourceNotFoundException("Profile", "username", username)
-        return StudentProfile(userInfo.username, userInfo.fullname,
-                userInfo.location, userInfo.employment, userInfo.current_role, userInfo.education,
-                userInfo.hidden, userInfo.job_type,
-                userInfo.job_field, userInfo.skills)
+        val student = userRepository.findByUsername(username)
+
+        if(student != null) {
+            return StudentProfile(
+                    student.username,
+                    student.fullname,
+                    student.userInfo.location,
+                    Employment(
+                            student.userInfo.position,
+                            student.userInfo.company),
+                    student.userInfo.current_role,
+                    Education(
+                            student.userInfo.university,
+                            student.userInfo.graduationYear,
+                            student.userInfo.graduationMonth,
+                            student.userInfo.major,
+                            student.userInfo.degree),
+                    student.userInfo.hidden,
+                    student.userInfo.job_type,
+                    student.userInfo.job_field,
+                    student.userInfo.skills)
+        }else throw ResourceNotFoundException("Profile", "username", username)
     }
 }

@@ -4,6 +4,7 @@ package kz.scope.hiremeserver.repository
 import kz.scope.hiremeserver.model.UserInfo
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import java.util.*
 
 
 /**
@@ -12,11 +13,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserInfoRepository : JpaRepository<UserInfo, Long> {
 
-    fun findByIdIn(userIds: List<Long>): List<UserInfo>
+    fun findByIdIn(list: List<Long>): List<UserInfo>
 
-    fun findByUsername(username: String): UserInfo?
-
-    fun existsByUsername(username: String): Boolean
 
     fun existsByIdIn(userIds: List<Long>): Boolean
 }
