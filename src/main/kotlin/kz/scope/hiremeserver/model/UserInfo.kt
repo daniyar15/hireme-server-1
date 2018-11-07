@@ -1,6 +1,8 @@
 package kz.scope.hiremeserver.model
 
 import kz.scope.hiremeserver.model.audit.DateAudit
+import kz.scope.hiremeserver.payload.Education
+import kz.scope.hiremeserver.payload.Employment
 import kz.scope.hiremeserver.payload.StudentProfile
 import org.hibernate.annotations.NaturalId
 import java.time.Instant
@@ -17,8 +19,7 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "userInfo", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("username")), UniqueConstraint(columnNames = arrayOf("email"))])
-class UserInfo//this.joinedAt = student.joinedAt
-(student: StudentProfile) {
+class UserInfo(student: StudentProfile) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
@@ -27,55 +28,40 @@ class UserInfo//this.joinedAt = student.joinedAt
 
     var fullname: String = ""
 
-    //var email: String = ""
-
-    //var joinedAt: Instant
-
-    //if Student - true, if new graduate - false
-    //var sOrGrad : Boolean = false
-
     //city name
     var location : String = ""
 
-    //Fields of work (e.g JavaScript, C++)
-    //var fields : String = ""
+    var employment: Employment
+
+    var current_role: String = ""
 
     //University, major etc
-    //var education : String = ""
-
-    //Bachelor, Master or PhD
-    //var degree : String = ""
+    var education : Education
 
     //keep info private - false, public - true
-    //var display : Boolean = false
+    var hidden : Boolean = false
 
     //part-time, full-time etc
-    //var jobType : String
+    var job_type : String
 
-    //mobile app developer, system level programmer etc
-    //var roleSpecification : String
+    var job_field : String
 
     //technical skills
-    //var skillSet: String
+    var skills: String
 
-    var employment_position : String
-    var employment_company : String
+
 
     init {
         this.username= student.username
         this.fullname= student.fullname
-        //this.email = student.email
-        //this.sOrGrad = student.sOrGrad
-        //this.fields = student.fields
         this.location = student.location
-        this.employment_position = student.employment_position
-        this.employment_company = student.employment_company
-        //this.education = student.education
-        //this.skillSet = student.skillSet
-        //this.display = student.display
-        //this.roleSpecification = student.roleSpecification
-        //this.jobType = student.jobType
-        //this.degree = student.degree
+        this.employment = student.employment
+        this.education = student.education
+        this.skills = student.skills
+        this.hidden = student.hidden
+        this.current_role = student.current_role
+        this.job_type = student.job_type
+        this.job_field = student.job_field
     }
 
 
