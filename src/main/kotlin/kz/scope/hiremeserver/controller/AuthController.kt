@@ -84,6 +84,10 @@ class AuthController {
 
         user.roles = setOf(userRole)
 
+        user.userInfo = UserInfo(StudentProfile(0, "", "", "",
+                false, "", "", "", "",
+                true, "", "", ""))
+
         val result = userRepository.save(user)
 
         val location = ServletUriComponentsBuilder
