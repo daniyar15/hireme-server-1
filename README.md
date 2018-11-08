@@ -109,6 +109,8 @@ JobOfferInfo = {
 
 ### Posts (news feed) - returns the last 10 posts for now
 
+`/api/posts`
+
 | Method | Path               | Request                     | Response                   | Protected |
 | :----: | :------------------| ----------------------------| -------------------------- | :-------: |
 |  POST  | `/post`            | RequestBody: <br>_Post_     | `{success, message, id}`   |    Yes    |
