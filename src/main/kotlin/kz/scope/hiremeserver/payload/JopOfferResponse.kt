@@ -2,7 +2,7 @@ package kz.scope.hiremeserver.payload
 
 import java.time.Instant
 
-data class JobOfferResponce (
+data class JobOfferResponse (
         var id: Long,
         var description_of_responsibilities: String,
         var skills: String,
