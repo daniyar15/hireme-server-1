@@ -111,21 +111,34 @@ JobOfferInfo = {
 
 `/api/post`
 
-| Method | Path               | Request                     | Response                   | Protected |
-| :----: | :------------------| ----------------------------| -------------------------- | :-------: |
-|  POST  | `/post`            | RequestBody: <br>_Post_     | `{success, message, id}`   |    Yes    |
-|   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`    | _Post_                     |    Yes    |
-|   GET  | `/posts`           | --                          | [_Post_]                   |    Yes    |
+| Method | Path               | Request                          | Response                   | Protected |
+| :----: | :------------------| -------------------------------- | -------------------------- | :-------: |
+|  POST  | `/post`            | RequestBody: <br>_PostForm_     | `{success, message, id}`   |    Yes    |
+|   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`         | _Post_                     |    Yes    |
+|   GET  | `/posts`           | --                               | [_Post_]                   |    Yes    |
 
+####Used in response
 ```js
 Post = {
-  id,                      // only in responce
+  id,                      
   company,                 // is company (true - author is company, false - author is user)
   author,                  // company id for company or user id for user
   title,
   text,
   [JobOfferInfo],
   created_at
+}
+
+```
+
+####Used in request
+```js
+PostForm = {
+  company,                 // is company (true - author is company, false - author is user)
+  author,                  // company id for company or user id for user
+  title,
+  text,
+  [Job Offers ids]
 }
 
 ```
