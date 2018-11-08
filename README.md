@@ -109,7 +109,7 @@ JobOfferInfo = {
 
 ### Posts (news feed) - returns the last 10 posts for now
 
-`/api/posts`
+`/api/post`
 
 | Method | Path               | Request                     | Response                   | Protected |
 | :----: | :------------------| ----------------------------| -------------------------- | :-------: |
@@ -120,7 +120,7 @@ JobOfferInfo = {
 ```js
 Post = {
   id,                      // only in responce
-  is_company,              // company or user
+  company,                 // is company (true - author is company, false - author is user)
   author,                  // company id for company or user id for user
   title,
   text,

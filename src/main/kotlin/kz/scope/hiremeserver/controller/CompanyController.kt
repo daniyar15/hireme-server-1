@@ -10,6 +10,8 @@ import kz.scope.hiremeserver.payload.CompanyRequest
 import kz.scope.hiremeserver.repository.CompanyRepository
 import kz.scope.hiremeserver.repository.EmployerInfoRepository
 import kz.scope.hiremeserver.repository.UserRepository
+import kz.scope.hiremeserver.security.CurrentUser
+import kz.scope.hiremeserver.security.UserPrincipal
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.CrudRepository
@@ -68,11 +70,13 @@ class CompanyController {
 
     @PostMapping("company")
     @PreAuthorize("hasRole('USER')")
-    fun createCompany(@Valid @RequestBody companyRequest: CompanyRequest) : ResponseEntity<*> {
+    fun createCompany(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody companyRequest: CompanyRequest) : ResponseEntity<*> {
         val user = userRepository.findByUsername(companyRequest.creator.username)
 
         if (user == null) {
             return ResponseEntity(ApiResponse(false, "Such creator does not exists"), HttpStatus.EXPECTATION_FAILED)
+        } else if (user.id != currentUser.id) {
+            return ResponseEntity(ApiResponse(false, "You can only register a company on your account."), HttpStatus.UNAUTHORIZED)
         }
 
         val manager = EmployerInfo(user, companyRequest.creator.role)
