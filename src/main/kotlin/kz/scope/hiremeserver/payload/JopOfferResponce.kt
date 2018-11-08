@@ -4,9 +4,11 @@ import java.time.Instant
 
 data class JobOfferResponce (
         var id: Long,
-        var role: String,
         var description_of_responsibilities: String,
-        var job_type: String,
         var skills: String,
-        var created_at: Instant
+        var role: String,
+        var company_id: Long,
+        var job_type: String,
+        var created_at: Instant,
+        var updated_at: Instant
 )

@@ -21,7 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.rmi.registry.LocateRegistry
 import javax.validation.Valid
 
-private val logger1 = LoggerFactory.getLogger(UserController::class.java)
+private val logger1 = LoggerFactory.getLogger(CompanyController::class.java)
 
 @RestController
 @RequestMapping("/api")

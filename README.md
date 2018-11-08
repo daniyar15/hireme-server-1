@@ -102,7 +102,7 @@ JobOfferInfo = {
   role,
   company_id,
   job_type,             
-  createdAt,            // only in response
-  updatedAt,            // only in response
+  created_at,            // only in response
+  updated_at            // only in response
 }
 ```
