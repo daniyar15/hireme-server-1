@@ -34,7 +34,5 @@ class Post() : DateAudit() {
     @JoinTable(name = "post_job_offer",
             joinColumns = [JoinColumn(name = "post_id")],
             inverseJoinColumns = [JoinColumn(name = "job_offer_id")])
-    lateinit var jobOffers: Set<JobOffer>
-
-
+    var jobOffers: MutableSet<JobOffer> = HashSet<JobOffer>()
 }
