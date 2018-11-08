@@ -81,3 +81,28 @@ CompanyInfo = {
   createdAt,            // Date when entry was created
 }
 ```
+
+### Job Offer
+
+`/api/job-offer`
+
+| Method | Path                          | Request                             | Response                   | Protected |
+| :----: | :---------------------------- | ----------------------------------- | -------------------------- | :-------: |
+|  POST  | `/job-offer`                  | RequestBody: <br>_JobOfferInfo_     | `{success, message, id}`   |    Yes    |
+|   GET  | `/job-offers/{id}`            | PathVariable: <br>`{id}`            | _JobOfferInfo_             |     No    |
+|   GET  | `/job-offers/find-by-company` | RequestBody: <br>`{company_id}`     | [_JobOfferInfo_]           |     No    |
+|   GET  | `/job-offers/find-by-role`    | RequestBody: <br>`{role}`           | [_JobOfferInfo_]           |     No    |
+|   GET  | `/job-offers/find-by-skills`  | RequestBody: <br>`{skills}`         | [_JobOfferInfo_]           |     No    |
+
+```js
+JobOfferInfo = {
+  id,                   // only in response
+  description_of_responsibilities,          
+  skills,
+  role,
+  company_id,
+  job_type,             
+  createdAt,            // only in response
+  updatedAt,            // only in response
+}
+```

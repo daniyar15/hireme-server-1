@@ -3,6 +3,8 @@ package kz.scope.hiremeserver.model
 import jdk.nashorn.internal.codegen.ApplySpecialization
 import kz.scope.hiremeserver.model.EmployerInfo
 import kz.scope.hiremeserver.model.audit.DateAudit
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -43,4 +45,8 @@ class Company() : DateAudit() {
     var numEmployees: Int = 0
     lateinit var specialization: String
     lateinit var description: String
+
+    // according to https://www.callicoder.com/spring-boot-spring-security-jwt-mysql-react-app-part-3/
+    @OneToMany(mappedBy = "company")
+    var job_offers: Set<JobOffer> = HashSet<JobOffer>()
 }
