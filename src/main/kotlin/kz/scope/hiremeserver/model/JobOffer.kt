@@ -15,12 +15,13 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "job_offer")
 class JobOffer() : DateAudit() {
-    constructor(descriptionOfResponsibilities: String, jobType: String, skills: String, role: String) : this() {
+    constructor(descriptionOfResponsibilities: String, jobType: String, skills: String, role: String, company: Company) : this() {
         this.descriptionOfResponsibilities = descriptionOfResponsibilities
         this.jobType = jobType
         // right now, String. In next iteration, needs to have a separate model
         this.skills = skills
         this.role = role
+        this.company = company
     }
 
     @Id
