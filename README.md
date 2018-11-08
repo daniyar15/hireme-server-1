@@ -106,3 +106,24 @@ JobOfferInfo = {
   updated_at            // only in response
 }
 ```
+
+### Posts (news feed) - returns the last 10 posts for now
+
+| Method | Path               | Request                     | Response                   | Protected |
+| :----: | :------------------| ----------------------------| -------------------------- | :-------: |
+|  POST  | `/post`            | RequestBody: <br>_Post_     | `{success, message, id}`   |    Yes    |
+|   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`    | _Post_                     |    Yes    |
+|   GET  | `/posts`           | --                          | [_Post_]                   |    Yes    |
+
+```js
+Post = {
+  id,                      // only in responce
+  is_company,              // company or user
+  author,                  // company id for company or user id for user
+  title,
+  text,
+  [JobOfferInfo],
+  created_at
+}
+
+```
