@@ -51,4 +51,7 @@ class JobOffer() : DateAudit() {
     @NotBlank
     @Size(max = 40)
     lateinit var role: String
+
+    @ManyToMany(mappedBy = "jobOffers")
+    lateinit var posts: Set<Post>
 }

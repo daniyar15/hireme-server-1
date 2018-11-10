@@ -106,3 +106,40 @@ JobOfferInfo = {
   updated_at            // only in response
 }
 ```
+
+
+### Posts (news feed) - returns the last 10 posts for now
+
+`/api/post`
+
+| Method | Path               | Request                          | Response                   | Protected |
+| :----: | :------------------| -------------------------------- | -------------------------- | :-------: |
+|  POST  | `/post`            | RequestBody: <br>_PostForm_     | `{success, message, id}`   |    Yes    |
+|   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`         | _Post_                     |    Yes    |
+|   GET  | `/posts`           | --                               | [_Post_]                   |    Yes    |
+
+Used in response
+```js
+Post = {
+  id,                      
+  company,                 // is company (true - author is company, false - author is user)
+  author,                  // company id for company or user id for user
+  title,
+  text,
+  jobOffers,               // list of JobOfferInfo
+  created_at
+}
+
+```
+
+Used in request
+```js
+PostForm = {
+  company,                 // is company (true - author is company, false - author is user)
+  author,                  // company id for company or user id for user
+  title,
+  text,
+  jobOffersIds             // list of ids of job offers
+}
+
+```
