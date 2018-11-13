@@ -1,7 +1,6 @@
 package kz.scope.hiremeserver.model
 
 import kz.scope.hiremeserver.model.audit.DateAudit
-import kz.scope.hiremeserver.payload.StudentProfile
 import org.hibernate.annotations.NaturalId
 import java.time.Instant
 import java.util.*
@@ -46,8 +45,8 @@ class User() : DateAudit() {
     @Size(max = 100)
     lateinit var password: String
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userinfo_id")
+    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "user_info")
     lateinit var userInfo: UserInfo
 
     @ManyToMany(fetch = FetchType.LAZY)

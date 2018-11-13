@@ -44,7 +44,7 @@ You can change it in [application.properties](src/main/resources/application.pro
 
 ```js
 UserInfo = {
-  username,             // Only in response
+  username,            
   fullname,
   location,
   employment: {         // Optional

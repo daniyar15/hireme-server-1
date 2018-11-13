@@ -56,7 +56,6 @@ class UserInfo(): DateAudit() {
     @Size(max = 40)
     lateinit var university: String
 
-    @NotBlank
     @Column(name = "graduation_year")
     var graduationYear: Int = 0
 
@@ -73,7 +72,6 @@ class UserInfo(): DateAudit() {
     @Size(max = 40)
     lateinit var degree: String
 
-    @NotBlank
     var hidden: Boolean = false
 
     @NotBlank
@@ -89,5 +87,8 @@ class UserInfo(): DateAudit() {
     @NotBlank
     @Size(max = 40)
     lateinit var skills: String
+
+    @OneToOne(mappedBy = "userInfo")
+    lateinit var user: User
 
 }

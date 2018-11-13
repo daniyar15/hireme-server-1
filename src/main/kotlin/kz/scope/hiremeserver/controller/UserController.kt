@@ -44,7 +44,10 @@ class UserController {
         return if (user == null){
             ResponseEntity(ApiResponse(false, "No such user"), HttpStatus.EXPECTATION_FAILED)
         } else {
-            user.userInfo = UserInfo(currentUser)
+            user.userInfo = UserInfo(currentUser.location, currentUser.employment.position, currentUser.employment.company,
+                    currentUser.current_role, currentUser.education.university, currentUser.education.graduation_year,
+                    currentUser.education.graduation_month, currentUser.education.major, currentUser.education.degree,
+                    currentUser.hidden, currentUser.job_type, currentUser.job_field, currentUser.skills)
 
             userInfoRepository.save(user.userInfo)
             val result = userRepository.save(user)
