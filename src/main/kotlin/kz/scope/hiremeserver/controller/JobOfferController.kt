@@ -3,12 +3,16 @@ package kz.scope.hiremeserver.controller
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
 import kz.scope.hiremeserver.model.JobOffer
+import kz.scope.hiremeserver.model.User
 import kz.scope.hiremeserver.payload.ApiResponse
 import kz.scope.hiremeserver.payload.CompanyRequest
 import kz.scope.hiremeserver.payload.JobOfferRequest
 import kz.scope.hiremeserver.payload.JobOfferResponse
 import kz.scope.hiremeserver.repository.CompanyRepository
 import kz.scope.hiremeserver.repository.JobOfferRepository
+import kz.scope.hiremeserver.repository.UserRepository
+import kz.scope.hiremeserver.security.CurrentUser
+import kz.scope.hiremeserver.security.UserPrincipal
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -29,6 +33,9 @@ class JobOfferController {
 
     @Autowired
     lateinit var companyRepository: CompanyRepository
+
+    @Autowired
+    lateinit var userRepository: UserRepository
 
     @GetMapping("/job-offers/{id}")
     @PreAuthorize("hasRole('USER')")
@@ -106,13 +113,43 @@ class JobOfferController {
 
     @PostMapping("/job-offer")
     @PreAuthorize("hasRole('USER')")
-    fun createJobOffer(@Valid @RequestBody jobOfferRequest: JobOfferRequest) : ResponseEntity<*> {
+    fun createJobOffer(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody jobOfferRequest: JobOfferRequest) : ResponseEntity<*> {
         val companyOptional = companyRepository.findById(jobOfferRequest.company_id)
         val company: Company
 
         if (companyOptional.isPresent) company = companyOptional.get()
         else return ResponseEntity(ApiResponse(false, "Such company does not exists"), HttpStatus.EXPECTATION_FAILED)
 
+        // getting current user of class User
+        val current_user_id = currentUser.id
+        val current_user_optional = userRepository.findById(current_user_id)
+        val current_user: User
+
+        if (current_user_optional.isPresent) {
+            current_user = current_user_optional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", current_user_id)
+        }
+
+        // getting all companies associated with the current users
+        val employers = current_user.managing
+
+        val companies: MutableList<Company> = ArrayList<Company>()
+
+        for (employer in employers) {
+            companies.add(employer.company)
+        }
+
+        var count = 0
+        for (company_candidate in companies) {
+            if (company_candidate.id == jobOfferRequest.company_id) {
+                count+=1
+            }
+        }
+
+        if (count == 0) {
+            return ResponseEntity(ApiResponse(false, "You can only post a job offer for a company managed by your account."), HttpStatus.UNAUTHORIZED)
+        }
 
         val jobOffer = JobOffer(jobOfferRequest.description_of_responsibilities, jobOfferRequest.job_type,
                 jobOfferRequest.skills, jobOfferRequest.role, company)

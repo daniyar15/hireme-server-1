@@ -107,7 +107,6 @@ JobOfferInfo = {
 }
 ```
 
-
 ### Posts (news feed) - returns the last 10 posts for now
 
 `/api/post`
