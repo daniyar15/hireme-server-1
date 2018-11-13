@@ -1,14 +1,7 @@
 package kz.scope.hiremeserver.model
 
 import kz.scope.hiremeserver.model.audit.DateAudit
-import kz.scope.hiremeserver.payload.Education
-import kz.scope.hiremeserver.payload.Employment
-import kz.scope.hiremeserver.payload.StudentProfile
-import org.hibernate.annotations.NaturalId
-import java.time.Instant
-import java.util.HashSet
 import javax.persistence.*
-import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
@@ -19,52 +12,82 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "userInfo", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("id"))])
-class UserInfo(student: StudentProfile) {
+class UserInfo(): DateAudit() {
+    constructor(location: String, position: String, company: String, currentRole: String, university: String,
+                graduationYear: Int, graduationMonth: String, major: String, degree: String,
+                hidden: Boolean, jobType: String, jobField: String, skills: String) : this() {
+        this.location = location
+        this.position = position
+        this.company = company
+        this.currentRole = currentRole
+        this.university = university
+        this.graduationYear = graduationYear
+        this.graduationMonth = graduationMonth
+        this.major = major
+        this.degree = degree
+        this.hidden = hidden
+        this.jobType = jobType
+        this.jobField = jobField
+        this.skills = skills
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 
-    var location : String = ""
+    @NotBlank
+    @Size(max = 40)
+    lateinit var location: String
 
-    var position : String = ""
-    var company : String = ""
+    @NotBlank
+    @Size(max = 40)
+    lateinit var position: String
 
-    var current_role: String = ""
+    @NotBlank
+    @Size(max = 40)
+    lateinit var company: String
 
-    var university : String = ""
-    var graduationYear : String = ""
-    var graduationMonth : String = ""
-    var major : String = ""
-    var degree : String = ""
+    @NotBlank
+    @Size(max = 40)
+    @Column(name = "current_role")
+    lateinit var currentRole: String
 
-    //keep info private - false, public - true
-    var hidden : Boolean = false
+    @NotBlank
+    @Size(max = 40)
+    lateinit var university: String
 
-    //part-time, full-time etc
-    var job_type : String
+    @NotBlank
+    @Column(name = "graduation_year")
+    var graduationYear: Int = 0
 
-    var job_field : String
+    @NotBlank
+    @Size(max = 40)
+    @Column(name = "graduation_month")
+    lateinit var graduationMonth: String
 
-    //technical skills
-    var skills: String
+    @NotBlank
+    @Size(max = 40)
+    lateinit var major: String
 
+    @NotBlank
+    @Size(max = 40)
+    lateinit var degree: String
 
+    @NotBlank
+    var hidden: Boolean = false
 
-    init {
-        this.location = student.location
-        this.position = student.employment.position
-        this.company = student.employment.company
-        this.university = student.education.university
-        this.graduationYear = student.education.graduation_year
-        this.graduationMonth = student.education.graduation_month
-        this.major = student.education.major
-        this.degree = student.education.degree
-        this.skills = student.skills
-        this.hidden = student.hidden
-        this.current_role = student.current_role
-        this.job_type = student.job_type
-        this.job_field = student.job_field
-    }
+    @NotBlank
+    @Size(max = 40)
+    @Column(name = "job_type")
+    lateinit var jobType: String
 
+    @NotBlank
+    @Size(max = 40)
+    @Column(name = "job_field")
+    lateinit var jobField: String
+
+    @NotBlank
+    @Size(max = 40)
+    lateinit var skills: String
 
 }

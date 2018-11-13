@@ -1,6 +1,6 @@
 package kz.scope.hiremeserver.payload
 
-data class StudentProfile(
+data class UserProfile (
         var username: String,
         var fullname: String,
         var location : String,
