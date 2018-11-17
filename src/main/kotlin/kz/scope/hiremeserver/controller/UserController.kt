@@ -29,7 +29,7 @@ class UserController {
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    protected fun getCurrentUser(@CurrentUser currentUser: UserPrincipal): UserSummary {
+    fun getCurrentUser(@CurrentUser currentUser: UserPrincipal): UserSummary {
         return UserSummary(currentUser.id, currentUser.username, currentUser.fullname)
     }
 
@@ -37,7 +37,7 @@ class UserController {
     //find the user in the DB and set new value to its userInfo
     @PostMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    protected fun postCurrentUserProfile(@CurrentUser currentUser: UserPrincipal, @RequestBody userProfile: UserProfile): ResponseEntity<*> {
+    fun postCurrentUserProfile(@CurrentUser currentUser: UserPrincipal, @RequestBody userProfile: UserProfile): ResponseEntity<*> {
 
         val user = userRepository.findByUsername(userProfile.username)
 
