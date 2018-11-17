@@ -37,17 +37,30 @@ class UserController {
     //find the user in the DB and set new value to its userInfo
     @PostMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    protected fun postCurrentUserProfile(@CurrentUser @RequestBody currentUser: UserProfile): ResponseEntity<*> {
+    protected fun postCurrentUserProfile(@CurrentUser currentUser: UserPrincipal, @RequestBody userProfile: UserProfile): ResponseEntity<*> {
 
-        val user = userRepository.findByUsername(currentUser.username)
+        val user = userRepository.findByUsername(userProfile.username)
 
-        return if (user == null){
-            ResponseEntity(ApiResponse(false, "No such user"), HttpStatus.EXPECTATION_FAILED)
+        if (user == null){
+            return ResponseEntity(ApiResponse(false, "No such user"), HttpStatus.EXPECTATION_FAILED)
+        } else if (!user.username.equals(currentUser.username)){
+            return ResponseEntity(ApiResponse(false, "You cannot edit user information for other user"), HttpStatus.EXPECTATION_FAILED)
         } else {
-            user.userInfo = UserInfo(currentUser.location, currentUser.employment.position, currentUser.employment.company,
-                    currentUser.current_role, currentUser.education.university, currentUser.education.graduation_year,
-                    currentUser.education.graduation_month, currentUser.education.major, currentUser.education.degree,
-                    currentUser.hidden, currentUser.job_type, currentUser.job_field, currentUser.skills)
+
+            user.userInfo.location = userProfile.location
+            user.userInfo.position = userProfile.employment.position
+            user.userInfo.company = userProfile.employment.company
+            user.userInfo.currentRole = userProfile.current_role
+            user.userInfo.university = userProfile.education.university
+            user.userInfo.graduationYear = userProfile.education.graduation_year
+            user.userInfo.graduationMonth = userProfile.education.graduation_month
+            user.userInfo.major = userProfile.education.major
+            user.userInfo.degree = userProfile.education.degree
+            user.userInfo.hidden = userProfile.hidden
+            user.userInfo.jobType = userProfile.job_type
+            user.userInfo.jobField = userProfile.job_field
+            user.userInfo.skills = userProfile.skills
+
 
             userInfoRepository.save(user.userInfo)
             val result = userRepository.save(user)
@@ -56,7 +69,7 @@ class UserController {
                     .fromCurrentContextPath().path("/users/{username}")
                     .buildAndExpand(result.username).toUri()
 
-            ResponseEntity.created(location).body(ApiResponse(true, "User profile edited successfully"))
+            return ResponseEntity.created(location).body(ApiResponse(true, "User profile edited successfully"))
         }
     }
 

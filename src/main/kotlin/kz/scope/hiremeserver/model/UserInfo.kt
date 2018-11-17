@@ -35,56 +35,45 @@ class UserInfo(): DateAudit() {
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 
-    @NotBlank
     @Size(max = 40)
     lateinit var location: String
 
-    @NotBlank
     @Size(max = 40)
     lateinit var position: String
 
-    @NotBlank
     @Size(max = 40)
     lateinit var company: String
 
-    @NotBlank
     @Size(max = 40)
     @Column(name = "current_role")
     lateinit var currentRole: String
 
-    @NotBlank
     @Size(max = 40)
     lateinit var university: String
 
     @Column(name = "graduation_year")
     var graduationYear: Int = 0
 
-    @NotBlank
     @Size(max = 40)
     @Column(name = "graduation_month")
     lateinit var graduationMonth: String
 
-    @NotBlank
     @Size(max = 40)
     lateinit var major: String
 
-    @NotBlank
     @Size(max = 40)
     lateinit var degree: String
 
     var hidden: Boolean = false
 
-    @NotBlank
     @Size(max = 40)
     @Column(name = "job_type")
     lateinit var jobType: String
 
-    @NotBlank
     @Size(max = 40)
     @Column(name = "job_field")
     lateinit var jobField: String
 
-    @NotBlank
     @Size(max = 40)
     lateinit var skills: String
 

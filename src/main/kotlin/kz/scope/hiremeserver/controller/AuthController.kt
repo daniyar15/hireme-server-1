@@ -6,6 +6,7 @@ import kz.scope.hiremeserver.model.User
 import kz.scope.hiremeserver.model.UserInfo
 import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.RoleRepository
+import kz.scope.hiremeserver.repository.UserInfoRepository
 import kz.scope.hiremeserver.repository.UserRepository
 import kz.scope.hiremeserver.security.JwtTokenProvider
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,6 +36,9 @@ class AuthController {
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var userInfoRepository: UserInfoRepository
 
     @Autowired
     lateinit var roleRepository: RoleRepository
@@ -83,7 +87,9 @@ class AuthController {
                 .orElseThrow { AppException("User Role not set.") }
 
         user.roles = setOf(userRole)
+        user.userInfo = UserInfo("", "", "", "", "", 0, "", "", "", false, "", "", "")
 
+        userInfoRepository.save(user.userInfo)
         val result = userRepository.save(user)
 
         val location = ServletUriComponentsBuilder
