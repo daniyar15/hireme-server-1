@@ -1,6 +1,6 @@
 package kz.scope.hiremeserver.payload
 
 data class Author(
-        var name: String,
-        var id: Long
+        var id: Long,
+        var name: String
 )
