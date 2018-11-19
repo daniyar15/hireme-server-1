@@ -59,7 +59,32 @@ class PostController {
                     jobOffer.role, jobOffer.company.id, jobOffer.jobType, jobOffer.createdAt, jobOffer.updatedAt))
         }
 
-        return PostResponse(post.id, post.isCompany, post.authorId, post.title, post.text, jobOfferResponses, post.createdAt)
+        val author: Author
+        if (post.isCompany) {
+            // author of the post is company
+            val companyOptional = companyRepository.findById(post.authorId)
+            val company: Company
+
+            if (companyOptional.isPresent) {
+                company = companyOptional.get()
+            } else {
+                throw ResourceNotFoundException("Company", "id", post.authorId)
+            }
+
+            author = Author(company.name, company.id)
+        } else {
+            val userOptional = userRepository.findById(post.authorId)
+            val user: User
+
+            if (userOptional.isPresent) {
+                user = userOptional.get()
+            } else {
+                throw ResourceNotFoundException("User", "id", post.authorId)
+            }
+
+            author = Author(user.fullname, user.id)
+        }
+        return PostResponse(post.id, post.isCompany, author, post.title, post.text, jobOfferResponses, post.createdAt)
     }
 
     @PostMapping("post")
@@ -163,7 +188,34 @@ class PostController {
                 jobOfferResponses.add(JobOfferResponse(jobOffer.id, jobOffer.descriptionOfResponsibilities, jobOffer.skills,
                         jobOffer.role, jobOffer.company.id, jobOffer.jobType, jobOffer.createdAt, jobOffer.updatedAt))
             }
-            responses.add(PostResponse(post.id, post.isCompany, post.authorId, post.title, post.text, jobOfferResponses, post.createdAt))
+
+            val author: Author
+            if (post.isCompany) {
+                // author of the post is company
+                val companyOptional = companyRepository.findById(post.authorId)
+                val company: Company
+
+                if (companyOptional.isPresent) {
+                    company = companyOptional.get()
+                } else {
+                    throw ResourceNotFoundException("Company", "id", post.authorId)
+                }
+
+                author = Author(company.name, company.id)
+            } else {
+                val userOptional = userRepository.findById(post.authorId)
+                val user: User
+
+                if (userOptional.isPresent) {
+                    user = userOptional.get()
+                } else {
+                    throw ResourceNotFoundException("User", "id", post.authorId)
+                }
+
+                author = Author(user.fullname, user.id)
+            }
+
+            responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, jobOfferResponses, post.createdAt))
         }
 
         return responses

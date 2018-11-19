@@ -122,7 +122,10 @@ Used in response
 Post = {
   id,                      
   company,                 // is company (true - author is company, false - author is user)
-  author,                  // company id for company or user id for user
+  author: {
+      id,                  // company id for company or user id for user
+      name                 // fullname for user or company name for company
+  }                 
   title,
   text,
   jobOffers,               // list of JobOfferInfo
