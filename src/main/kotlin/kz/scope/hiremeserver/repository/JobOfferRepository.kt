@@ -10,9 +10,6 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 interface JobOfferRepository : JpaRepository<JobOffer, Long> {
-    fun findByDescriptionOfResponsibilities(descriprionOfResponsibilities: String): List<JobOffer>
-    fun findBySkills(skills: String): List<JobOffer>
-    fun findByJobType(jobType: String): List<JobOffer>
     fun findByCompany(company: Company): List<JobOffer>
-    fun findByRole(role: String): List<JobOffer>
+    fun findByPosition(position: String): List<JobOffer>
 }

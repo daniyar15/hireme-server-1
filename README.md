@@ -91,18 +91,22 @@ CompanyInfo = {
 |  POST  | `/job-offer`                  | RequestBody: <br>_JobOfferInfo_     | `{success, message, id}`   |    Yes    |
 |   GET  | `/job-offers/{id}`            | PathVariable: <br>`{id}`            | _JobOfferInfo_             |    Yes    |
 |   GET  | `/job-offers/find-by-company` | RequestBody: <br>`{company_id}`     | [_JobOfferInfo_]           |    Yes    |
-|   GET  | `/job-offers/find-by-role`    | RequestBody: <br>`{role}`           | [_JobOfferInfo_]           |    Yes    |
-|   GET  | `/job-offers/find-by-skills`  | RequestBody: <br>`{skills}`         | [_JobOfferInfo_]           |    Yes    |
+|   GET  | `/job-offers/find-by-position`| RequestBody: <br>`{role}`           | [_JobOfferInfo_]           |    Yes    |
+|   GET  | `/job-offers/find-by-location`| RequestBody: <br>`{location}`         | [_JobOfferInfo_]           |    Yes    |
 
 ```js
 JobOfferInfo = {
   id,                   // only in response
-  description_of_responsibilities,          
-  skills,
-  role,
-  company_id,
-  job_type,             
-  created_at,            // only in response
+  company: {
+      company_id,
+      name,             // only in response
+      logo              // only in response
+  },
+  position,
+  responsibilities,          
+  qualifications,
+  [location]            // list of locations              
+  created_at,           // only in response
   updated_at            // only in response
 }
 ```
@@ -125,7 +129,7 @@ Post = {
   author: {
       id,                  // company id for company or user id for user
       name                 // fullname for user or company name for company
-  }                 
+  },                 
   title,
   text,
   jobOffers,               // list of JobOfferInfo

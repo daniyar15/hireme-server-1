@@ -7,6 +7,7 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
+import kotlin.collections.ArrayList
 
 /**
  * Created by scope team on 01/08/17.
@@ -15,12 +16,12 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "job_offer")
 class JobOffer() : DateAudit() {
-    constructor(descriptionOfResponsibilities: String, jobType: String, skills: String, role: String, company: Company) : this() {
-        this.descriptionOfResponsibilities = descriptionOfResponsibilities
-        this.jobType = jobType
+    constructor(position: String, responsibilities: String, qualifications: String, locations: MutableList<JobOfferLocation>, company: Company) : this() {
+        this.responsibilities = responsibilities
+        this.qualifications = qualifications
         // right now, String. In next iteration, needs to have a separate model
-        this.skills = skills
-        this.role = role
+        this.locations = locations
+        this.position = position
         this.company = company
     }
 
@@ -34,23 +35,18 @@ class JobOffer() : DateAudit() {
     @NotNull
     lateinit var company: Company
 
-    @NotBlank
-    @Size(max = 200)
-    @Column(name = "description_of_responsibilities")
-    lateinit var descriptionOfResponsibilities: String
+    @Size(max = 240)
+    @Column(name = "responsibilities")
+    lateinit var responsibilities: String
 
-    @NotBlank
     @Size(max = 40)
-    @Column(name = "job_type")
-    lateinit var jobType: String
+    @Column(name = "position")
+    lateinit var position: String
 
-    @NotBlank
-    @Size(max = 100)
-    lateinit var skills: String
+    lateinit var qualifications: String
 
-    @NotBlank
-    @Size(max = 40)
-    lateinit var role: String
+    @OneToMany(mappedBy = "jobOffer")
+    var locations: MutableList<JobOfferLocation> = ArrayList<JobOfferLocation>()
 
     @ManyToMany(mappedBy = "jobOffers")
     lateinit var posts: Set<Post>

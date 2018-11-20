@@ -3,12 +3,11 @@ package kz.scope.hiremeserver.controller
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
 import kz.scope.hiremeserver.model.JobOffer
+import kz.scope.hiremeserver.model.JobOfferLocation
 import kz.scope.hiremeserver.model.User
-import kz.scope.hiremeserver.payload.ApiResponse
-import kz.scope.hiremeserver.payload.CompanyRequest
-import kz.scope.hiremeserver.payload.JobOfferRequest
-import kz.scope.hiremeserver.payload.JobOfferResponse
+import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.CompanyRepository
+import kz.scope.hiremeserver.repository.JobOfferLocationRepository
 import kz.scope.hiremeserver.repository.JobOfferRepository
 import kz.scope.hiremeserver.repository.UserRepository
 import kz.scope.hiremeserver.security.CurrentUser
@@ -37,6 +36,9 @@ class JobOfferController {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var jobofferLocationRepository: JobOfferLocationRepository
+
     @GetMapping("/job-offers/{id}")
     @PreAuthorize("hasRole('USER')")
     fun getJobOffer(@PathVariable(value = "id") id: Long): JobOfferResponse {
@@ -49,8 +51,13 @@ class JobOfferController {
             throw ResourceNotFoundException("Job Offer", "id", id)
         }
 
-        return JobOfferResponse(jobOffer.id, jobOffer.descriptionOfResponsibilities, jobOffer.skills,
-                jobOffer.role, jobOffer.company.id, jobOffer.jobType, jobOffer.createdAt, jobOffer.updatedAt)
+        val company = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
+        val locations: MutableList<String> = ArrayList<String>()
+        for (location in jobOffer.locations) {
+            locations.add(location.location)
+        }
+        return JobOfferResponse(jobOffer.id, company, jobOffer.position,
+                jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt)
     }
 
     @GetMapping("/job-offers/find-by-company")
@@ -70,43 +77,63 @@ class JobOfferController {
         val jobOffers = jobOfferRepository.findByCompany(company)
         val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
 
+        val companyResponse = CompanyJobOfferResponse(company.id, company.name, company.logo)
         for (jobOffer in jobOffers) {
-            jobOfferResponses.add(JobOfferResponse(jobOffer.id, jobOffer.descriptionOfResponsibilities, jobOffer.skills,
-                    jobOffer.role, jobOffer.company.id, jobOffer.jobType, jobOffer.createdAt, jobOffer.updatedAt))
+            val locations: MutableList<String> = ArrayList<String>()
+            for (location in jobOffer.locations) {
+                locations.add(location.location)
+            }
+
+            jobOfferResponses.add(JobOfferResponse(jobOffer.id, companyResponse, jobOffer.position,
+                    jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt,
+                    jobOffer.updatedAt))
         }
 
         return jobOfferResponses
     }
 
-    @GetMapping("/job-offers/find-by-role")
+    @GetMapping("/job-offers/find-by-position")
     @PreAuthorize("hasRole('USER')")
-    fun getJobOfferByRole(@RequestParam(value = "role", required = true) role: String)
+    fun getJobOfferByRole(@RequestParam(value = "position", required = true) position: String)
             : List<JobOfferResponse> {
 
-        val jobOffers = jobOfferRepository.findByRole(role)
+        val jobOffers = jobOfferRepository.findByPosition(position)
         val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
 
         for (jobOffer in jobOffers) {
-            jobOfferResponses.add(JobOfferResponse(jobOffer.id, jobOffer.descriptionOfResponsibilities, jobOffer.skills,
-                    jobOffer.role, jobOffer.company.id, jobOffer.jobType, jobOffer.createdAt, jobOffer.updatedAt))
-        }
+            val companyResponse = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
+            val locations: MutableList<String> = ArrayList<String>()
+            for (location in jobOffer.locations) {
+                locations.add(location.location)
+            }
 
+            jobOfferResponses.add(JobOfferResponse(jobOffer.id, companyResponse, jobOffer.position,
+                    jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt,
+                    jobOffer.updatedAt))
+        }
         return jobOfferResponses
     }
 
-    // does not find when + symbol is used in skill
-    @GetMapping("/job-offers/find-by-skills")
+    @GetMapping("/job-offers/find-by-location")
     @PreAuthorize("hasRole('USER')")
-    fun getJobOfferBySkills(@RequestParam(value = "skills", required = true) skills: String)
+    fun getJobOfferBySkills(@RequestParam(value = "location", required = true) locationToSearch: String)
             : List<JobOfferResponse> {
 
-        val jobOffers = jobOfferRepository.findBySkills(skills)
+        val jobOfferLocations = jobofferLocationRepository.findByLocation(locationToSearch)
         val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
+        for (jobOfferLocation in jobOfferLocations) {
+            val jobOffer = jobOfferLocation.jobOffer
+            val companyResponse = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
+            val locations: MutableList<String> = ArrayList<String>()
+            for (location in jobOffer.locations) {
+                locations.add(location.location)
+            }
 
-        for (jobOffer in jobOffers) {
-            jobOfferResponses.add(JobOfferResponse(jobOffer.id, jobOffer.descriptionOfResponsibilities, jobOffer.skills,
-                    jobOffer.role, jobOffer.company.id, jobOffer.jobType, jobOffer.createdAt, jobOffer.updatedAt))
+            jobOfferResponses.add(JobOfferResponse(jobOffer.id, companyResponse, jobOffer.position,
+                    jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt,
+                    jobOffer.updatedAt))
         }
+
 
         return jobOfferResponses
     }
@@ -114,7 +141,7 @@ class JobOfferController {
     @PostMapping("/job-offer")
     @PreAuthorize("hasRole('USER')")
     fun createJobOffer(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody jobOfferRequest: JobOfferRequest) : ResponseEntity<*> {
-        val companyOptional = companyRepository.findById(jobOfferRequest.company_id)
+        val companyOptional = companyRepository.findById(jobOfferRequest.company.company_id)
         val company: Company
 
         if (companyOptional.isPresent) company = companyOptional.get()
@@ -142,7 +169,7 @@ class JobOfferController {
 
         var count = 0
         for (company_candidate in companies) {
-            if (company_candidate.id == jobOfferRequest.company_id) {
+            if (company_candidate.id == jobOfferRequest.company.company_id) {
                 count+=1
             }
         }
@@ -151,15 +178,25 @@ class JobOfferController {
             return ResponseEntity(ApiResponse(false, "You can only post a job offer for a company managed by your account."), HttpStatus.UNAUTHORIZED)
         }
 
-        val jobOffer = JobOffer(jobOfferRequest.description_of_responsibilities, jobOfferRequest.job_type,
-                jobOfferRequest.skills, jobOfferRequest.role, company)
+
+        val jobOffer = JobOffer(jobOfferRequest.position, jobOfferRequest.responsibilities, jobOfferRequest.qualifications,
+                ArrayList<JobOfferLocation>(), company)
+
+        for (locationName in jobOfferRequest.locations) {
+            val newLocation = JobOfferLocation(locationName)
+            newLocation.jobOffer = jobOffer
+            jobOffer.locations.add(newLocation)
+        }
 
         val result = jobOfferRepository.save(jobOffer)
+        for (locationToSave in jobOffer.locations) {
+            jobofferLocationRepository.save(locationToSave)
+        }
         val location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/job-offers/{id}")
                 .buildAndExpand(result.id).toUri()
 
-        return ResponseEntity.created(location).body(ApiResponse(true, "Company registered successfully"))
+        return ResponseEntity.created(location).body(ApiResponse(true, "Job offer registered successfully"))
     }
 
 }
