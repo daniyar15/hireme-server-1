@@ -94,7 +94,7 @@ class JobOfferController {
 
     @GetMapping("/job-offers/find-by-position")
     @PreAuthorize("hasRole('USER')")
-    fun getJobOfferByRole(@RequestParam(value = "position", required = true) position: String)
+    fun getJobOfferByPosition(@RequestParam(value = "position", required = true) position: String)
             : List<JobOfferResponse> {
 
         val jobOffers = jobOfferRepository.findByPosition(position)
@@ -116,7 +116,7 @@ class JobOfferController {
 
     @GetMapping("/job-offers/find-by-location")
     @PreAuthorize("hasRole('USER')")
-    fun getJobOfferBySkills(@RequestParam(value = "location", required = true) locationToSearch: String)
+    fun getJobOfferByLocation(@RequestParam(value = "location", required = true) locationToSearch: String)
             : List<JobOfferResponse> {
 
         val jobOfferLocations = jobofferLocationRepository.findByLocation(locationToSearch)
@@ -133,7 +133,6 @@ class JobOfferController {
                     jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt,
                     jobOffer.updatedAt))
         }
-
 
         return jobOfferResponses
     }

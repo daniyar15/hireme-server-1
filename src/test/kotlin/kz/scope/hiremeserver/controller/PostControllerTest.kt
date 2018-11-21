@@ -200,7 +200,6 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated)
     }
 
-
     @Test
     @Transactional
     fun getPosts() {
