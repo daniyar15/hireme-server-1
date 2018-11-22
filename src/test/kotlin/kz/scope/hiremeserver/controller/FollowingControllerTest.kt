@@ -160,23 +160,161 @@ class FollowingControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk)
     }
 
-//    @Test
-//    @Transactional
-//    fun follow() {
-//        // authentication
-//        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-//                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
-//                        usernameOrEmail = existingUser.username,
-//                        password = existingUser.password)))
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isOk)
-//                .andReturn()
-//
-//        objMapper.registerKotlinModule()
-//        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
-//        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
-//
-//
-//    }
+    @Test
+    @Transactional
+    fun follow() {
+        // authentication
+        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+                        usernameOrEmail = existingUser.username,
+                        password = existingUser.password)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+
+        objMapper.registerKotlinModule()
+        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+
+        // without authorization header
+        mvc.perform(MockMvcRequestBuilders.post("/api/bek_zhan/follow"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+
+        // non existing target user
+        mvc.perform(MockMvcRequestBuilders.post("/api/non-existent/follow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound)
+
+        // cannot follow yourself
+        mvc.perform(MockMvcRequestBuilders.post("/api/the_7th_hokage/follow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        // cannot follow twice
+        mvc.perform(MockMvcRequestBuilders.post("/api/kirito/follow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.post("/api/sasuke/follow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isCreated)
+    }
+
+    @Test
+    @Transactional
+    fun unfollow() {
+        // authentication
+        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+                        usernameOrEmail = existingUser.username,
+                        password = existingUser.password)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+
+        objMapper.registerKotlinModule()
+        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+
+        // without authorization header
+        mvc.perform(MockMvcRequestBuilders.delete("/api/spike/unfollow"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+
+        // non existing target user
+        mvc.perform(MockMvcRequestBuilders.delete("/api/non-existent/unfollow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound)
+
+        // cannot follow yourself
+        mvc.perform(MockMvcRequestBuilders.delete("/api/the_7th_hokage/unfollow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        // cannot unfollow if you don't already follow
+        mvc.perform(MockMvcRequestBuilders.delete("/api/sasuke/unfollow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.delete("/api/spike/unfollow")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isCreated)
+    }
+
+    @Test
+    @Transactional
+    fun followCompany() {
+        // authentication
+        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+                        usernameOrEmail = existingUser.username,
+                        password = existingUser.password)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+
+        objMapper.registerKotlinModule()
+        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+
+        // without authorization header
+        mvc.perform(MockMvcRequestBuilders.post("/api/10/follow-company"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+
+        // non existing target company
+        mvc.perform(MockMvcRequestBuilders.post("/api/0/follow-company")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound)
+
+        // cannot follow twice
+        mvc.perform(MockMvcRequestBuilders.post("/api/9/follow-company")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.post("/api/10/follow-company")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isCreated)
+    }
+
+    @Test
+    @Transactional
+    fun unfollowCompany() {
+        // authentication
+        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+                        usernameOrEmail = existingUser.username,
+                        password = existingUser.password)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andReturn()
+
+        objMapper.registerKotlinModule()
+        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+
+        // without authorization header
+        mvc.perform(MockMvcRequestBuilders.delete("/api/9/unfollow-company"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+
+        // non existing target company
+        mvc.perform(MockMvcRequestBuilders.delete("/api/0/unfollow-company")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound)
+
+        // cannot unfollow if you don't already follow
+        mvc.perform(MockMvcRequestBuilders.delete("/api/10/unfollow-company")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+
+        // ok
+        mvc.perform(MockMvcRequestBuilders.delete("/api/9/unfollow-company")
+                .header("Authorization", "Bearer ${response.accessToken}"))
+                .andExpect(MockMvcResultMatchers.status().isCreated)
+    }
 }
