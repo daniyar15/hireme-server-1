@@ -147,18 +147,18 @@ class JobOfferController {
         else return ResponseEntity(ApiResponse(false, "Such company does not exists"), HttpStatus.EXPECTATION_FAILED)
 
         // getting current user of class User
-        val current_user_id = currentUser.id
-        val current_user_optional = userRepository.findById(current_user_id)
-        val current_user: User
+        val currentUserId = currentUser.id
+        val currentUserOptional = userRepository.findById(currentUserId)
+        val curUser: User
 
-        if (current_user_optional.isPresent) {
-            current_user = current_user_optional.get()
+        if (currentUserOptional.isPresent) {
+            curUser = currentUserOptional.get()
         } else {
-            throw ResourceNotFoundException("User", "id", current_user_id)
+            throw ResourceNotFoundException("User", "id", currentUserId)
         }
 
         // getting all companies associated with the current users
-        val employers = current_user.managing
+        val employers = curUser.managing
 
         val companies: MutableList<Company> = ArrayList<Company>()
 

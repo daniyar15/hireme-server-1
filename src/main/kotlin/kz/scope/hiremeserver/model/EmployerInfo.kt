@@ -26,6 +26,4 @@ class EmployerInfo() {
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "manager")
     lateinit var company: Company
-
-
 }

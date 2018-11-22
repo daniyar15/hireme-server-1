@@ -53,7 +53,10 @@ class User() : DateAudit() {
     @JoinTable(name = "user_roles", joinColumns = [JoinColumn(name = "user_id")], inverseJoinColumns = [JoinColumn(name = "role_id")])
     var roles: Set<Role> = HashSet()
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "relationship", joinColumns = [JoinColumn(name = "following_id")], inverseJoinColumns = [JoinColumn(name = "followed_id")])
+    var following: MutableSet<User> = HashSet()
+
     @OneToMany(mappedBy = "user")
     var managing: MutableList<EmployerInfo> = ArrayList<EmployerInfo>()
-
 }

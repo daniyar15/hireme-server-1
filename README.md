@@ -117,7 +117,7 @@ JobOfferInfo = {
 
 | Method | Path               | Request                          | Response                   | Protected |
 | :----: | :------------------| -------------------------------- | -------------------------- | :-------: |
-|  POST  | `/post`            | RequestBody: <br>_PostForm_     | `{success, message, id}`   |    Yes    |
+|  POST  | `/post`            | RequestBody: <br>_PostForm_      | `{success, message, id}`   |    Yes    |
 |   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`         | _Post_                     |    Yes    |
 |   GET  | `/posts`           | --                               | [_Post_]                   |    Yes    |
 
@@ -149,3 +149,13 @@ PostForm = {
 }
 
 ```
+
+### Following users
+
+`/api`
+
+| Method | Path                  | Request                                                       | Response                   | Protected |
+| :----: | :---------------------| ------------------------------------------------------------- | -------------------------- | :-------: |
+|  POST  | `/{username}/follow`   | PathVariable: <br>`{username}`                                 | `{success, message, id}`   |    Yes    |
+|   GET  | `/{username}/followers`| PathVariable: <br>`{username}`                                 | [_User_]                   |    Yes    |
+|   GET  | `/{username}/following`| PathVariable: <br>`{username}`                                 | [_User_]                   |    Yes    |

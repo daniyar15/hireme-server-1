@@ -33,7 +33,6 @@ class UserController {
         return UserSummary(currentUser.id, currentUser.username, currentUser.fullname)
     }
 
-
     //find the user in the DB and set new value to its userInfo
     @PostMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
@@ -117,7 +116,7 @@ class UserController {
     fun getUserProfile(@PathVariable(value = "username") username: String): UserProfile {
         val user = userRepository.findByUsername(username)
 
-        if(user != null) {
+        if (user != null) {
             return UserProfile(
                     user.username,
                     user.fullname,
