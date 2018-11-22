@@ -9,6 +9,6 @@ data class PostResponse (
         var title: String,
         var text: String,
         var photo_link: String,
-        var jobOffers: List<JobOfferResponse>,
+        var jobOffer: JobOfferResponse?,
         var createdAt: Instant
 )

@@ -3,10 +3,8 @@ package kz.scope.hiremeserver.controller
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
 import kz.scope.hiremeserver.model.EmployerInfo
-import kz.scope.hiremeserver.payload.ApiResponse
-import kz.scope.hiremeserver.payload.CompanyCreator
-import kz.scope.hiremeserver.payload.CompanyProfile
-import kz.scope.hiremeserver.payload.CompanyRequest
+import kz.scope.hiremeserver.model.User
+import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.CompanyRepository
 import kz.scope.hiremeserver.repository.EmployerInfoRepository
 import kz.scope.hiremeserver.repository.UserRepository
@@ -93,6 +91,28 @@ class CompanyController {
                 .buildAndExpand(result.id).toUri()
 
         return ResponseEntity.created(location).body(ApiResponse(true, "Company registered successfully"))
+    }
+
+    @GetMapping("/my-companies")
+    @PreAuthorize("hasRole('USER')")
+    fun getMyCompanies(@CurrentUser currentUser: UserPrincipal) : List<CompanySummary> {
+        val userOptional = userRepository.findById(currentUser.id)
+        val user: User
+        val companies: MutableList<CompanySummary> = ArrayList()
+
+        if (userOptional.isPresent) {
+            user = userOptional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", currentUser.id)
+        }
+
+        for (employer in user.managing) {
+            companies.add(CompanySummary(
+                    id = employer.company.id,
+                    name = employer.company.name,
+                    description = employer.company.description))
+        }
+        return companies
     }
 
 }

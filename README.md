@@ -34,14 +34,15 @@ You can change it in [application.properties](src/main/resources/application.pro
 
 ### Company
 
-`/api/company`
+`/api`
 
 | Method | Path              | Request                             | Response                   | Protected |
 | :----: | :---------------- | ----------------------------------- | -------------------------- | :-------: |
 |  POST  | `/company`        | RequestBody: <br>_CompanyInfo_      | `{success, message, id}`   |    Yes    |
 |   GET  | `/companies/{id}` | PathVariable: <br>`{id}`            | _CompanyInfo_              |     No    |
 |   GET  | `/companies/find` | RequestBody: <br>`{name, location}` | [_CompanyInfo_]            |     No    |
-
+|   GET  | `/my-companies`   | -                                   | [_CompanySummary_]         |     Yes    |
+ 
 ```js
 UserInfo = {
   username,            
@@ -133,7 +134,7 @@ Post = {
   title,
   text,
   photo_link,              // empty string if no photo 
-  jobOffers,               // list of JobOfferInfo
+  jobOfferInfo,            // when this field is not null, ignore other fields
   created_at
 }
 
@@ -147,7 +148,7 @@ PostForm = {
   title,
   text,
   photo_link,    
-  jobOffersIds             // list of ids of job offers
+  jobOfferInfo             // when this field is not null, ignore other fields
 }
 
 ```
@@ -156,8 +157,28 @@ PostForm = {
 
 `/api`
 
-| Method | Path                  | Request                                                       | Response                   | Protected |
-| :----: | :---------------------| ------------------------------------------------------------- | -------------------------- | :-------: |
-|  POST  | `/{username}/follow`   | PathVariable: <br>`{username}`                                 | `{success, message, id}`   |    Yes    |
-|   GET  | `/{username}/followers`| PathVariable: <br>`{username}`                                 | [_User_]                   |    Yes    |
-|   GET  | `/{username}/following`| PathVariable: <br>`{username}`                                 | [_User_]                   |    Yes    |
+| Method | Path                             | Request                                                          | Response                   | Protected |
+| :----: | :--------------------------------| ---------------------------------------------------------------- | -------------------------- | :-------: |
+|  POST  | `/{username}/follow`             | PathVariable: <br>`{username}`                                   | `{success, message, id}`   |    Yes    |
+|   GET  | `/{username}/followers`          | PathVariable: <br>`{username}`                                   | [_UserSummary_]            |    Yes    |
+|   GET  | `/{username}/following`          | PathVariable: <br>`{username}`                                   | [_UserSummary_]            |    Yes    |
+|   GET  | `/{username}/following-companies`| PathVariable: <br>`{username}`                                   | [_CompanySummary_]         |    Yes    |
+|  POST  | `/{company_id}/follow-company`   | PathVariable: <br>`{company_id}`                                 | `{success, message, id}`   |    Yes    |
+|   GET  | `/{company_id}/company-followers`| PathVariable: <br>`{company_id}`                                 | [_UserSummary_]            |    Yes    |
+| DELETE | `/{username}/unfollow`           | PathVariable: <br>`{username}`                                   | `{success, message, id}`   |    Yes    |
+| DELETE | `/{company_id}/unfollow-company` | PathVariable: <br>`{company_id}`                                 | `{success, message, id}`   |    Yes    |
+
+Used only in response
+```js
+CompanySummary = {
+    id,
+    name,
+    description
+}
+
+UserSummary = {
+    id,
+    username,
+    fullname
+}
+```

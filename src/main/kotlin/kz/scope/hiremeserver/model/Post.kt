@@ -1,6 +1,7 @@
 package kz.scope.hiremeserver.model
 
 import kz.scope.hiremeserver.model.audit.DateAudit
+import org.springframework.boot.autoconfigure.batch.BatchProperties
 import javax.persistence.*
 import javax.validation.constraints.Size
 
@@ -30,12 +31,7 @@ class Post() : DateAudit() {
 
     lateinit var photoLink: String
 
-    @ManyToMany(cascade = [
-        CascadeType.PERSIST,
-        CascadeType.MERGE
-    ])
-    @JoinTable(name = "post_job_offer",
-            joinColumns = [JoinColumn(name = "post_id")],
-            inverseJoinColumns = [JoinColumn(name = "job_offer_id")])
-    var jobOffers: MutableSet<JobOffer> = HashSet<JobOffer>()
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(name = "job_offer_id")
+    var jobOffer: JobOffer? = null
 }

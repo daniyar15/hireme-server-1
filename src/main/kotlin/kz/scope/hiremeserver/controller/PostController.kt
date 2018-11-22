@@ -53,16 +53,22 @@ class PostController {
             throw ResourceNotFoundException("Post", "id", id)
         }
 
-        val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
-        for (jobOffer in post.jobOffers) {
+        val jobOfferResponse: JobOfferResponse?
+        val jobOffer = post.jobOffer
+
+        if (jobOffer == null) {
+            // this post is just job offer
+            jobOfferResponse = null
+        } else {
+            // this post is not a job offer, but rather a simple yet powerful post
             val company = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
             val locations: MutableList<String> = ArrayList<String>()
             for (location in jobOffer.locations) {
                 locations.add(location.location)
             }
 
-            jobOfferResponses.add(JobOfferResponse(jobOffer.id, company, jobOffer.position,
-                    jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt))
+            jobOfferResponse = JobOfferResponse(jobOffer.id, company, jobOffer.position,
+                    jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt)
         }
 
         val author: Author
@@ -90,75 +96,75 @@ class PostController {
 
             author = Author(user.id, user.fullname)
         }
-        return PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt)
+        return PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponse, post.createdAt)
     }
 
-    @PostMapping("post")
-    @PreAuthorize("hasRole('USER')")
-    fun addPost(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody postRequest: PostRequest)
-            : ResponseEntity<*> {
-        if (postRequest.company) {
-            // author of the post is company
-            val companyOptional = companyRepository.findById(postRequest.author)
-
-            if (companyOptional.isPresent.not()) {
-                return ResponseEntity(ApiResponse(false, "Such company does not exists"), HttpStatus.EXPECTATION_FAILED)
-            }
-
-            // getting current user of class User
-            val current_user_id = currentUser.id
-            val current_user_optional = userRepository.findById(current_user_id)
-            val current_user: User
-
-            if (current_user_optional.isPresent) {
-                current_user = current_user_optional.get()
-            } else {
-                throw ResourceNotFoundException("User", "id", current_user_id)
-            }
-
-            val post = Post(postRequest.company, postRequest.author, postRequest.title, postRequest.text, postRequest.photo_link)
-
-            for (jobOfferId in postRequest.jobOffersIds) {
-                val jobOfferOptional = jobOfferRepository.findById(jobOfferId)
-                if(jobOfferOptional.isPresent) post.jobOffers.add(jobOfferOptional.get())
-                else return ResponseEntity(ApiResponse(false, "Job Offer with one of ids does not exists")
-                        , HttpStatus.EXPECTATION_FAILED)
-            }
-
-            val result = postRepository.save(post)
-            val location = ServletUriComponentsBuilder
-                    .fromCurrentContextPath().path("/posts/{id}")
-                    .buildAndExpand(result.id).toUri()
-
-            return ResponseEntity.created(location).body(ApiResponse(true, "Post created successfully"))
-
-        } else {
-            // author of the post is user
-            val userOptional = userRepository.findById(postRequest.author)
-
-            if (userOptional.isPresent.not()) {
-                return ResponseEntity(ApiResponse(false, "Such user does not exists"), HttpStatus.EXPECTATION_FAILED)
-            } else if (userOptional.get().id != currentUser.id) {
-                return ResponseEntity(ApiResponse(false, "You can only create post on your account."), HttpStatus.UNAUTHORIZED)
-            }
-
-            val post = Post(postRequest.company, postRequest.author, postRequest.title, postRequest.text, postRequest.photo_link)
-
-            for (jobOfferId in postRequest.jobOffersIds) {
-                val jobOfferOptional = jobOfferRepository.findById(jobOfferId)
-                if(jobOfferOptional.isPresent) post.jobOffers.add(jobOfferOptional.get())
-                else return ResponseEntity(ApiResponse(false, "Job Offer with one of ids does not exists")
-                        , HttpStatus.EXPECTATION_FAILED)
-            }
-
-            val result = postRepository.save(post)
-            val location = ServletUriComponentsBuilder
-                    .fromCurrentContextPath().path("/posts/{id}")
-                    .buildAndExpand(result.id).toUri()
-
-            return ResponseEntity.created(location).body(ApiResponse(true, "Post created successfully"))
-        }
-    }
+//    @PostMapping("post")
+//    @PreAuthorize("hasRole('USER')")
+//    fun addPost(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody postRequest: PostRequest)
+//            : ResponseEntity<*> {
+//        if (postRequest.company) {
+//            // author of the post is company
+//            val companyOptional = companyRepository.findById(postRequest.author)
+//
+//            if (companyOptional.isPresent.not()) {
+//                return ResponseEntity(ApiResponse(false, "Such company does not exists"), HttpStatus.EXPECTATION_FAILED)
+//            }
+//
+//            // getting current user of class User
+//            val current_user_id = currentUser.id
+//            val current_user_optional = userRepository.findById(current_user_id)
+//            val current_user: User
+//
+//            if (current_user_optional.isPresent) {
+//                current_user = current_user_optional.get()
+//            } else {
+//                throw ResourceNotFoundException("User", "id", current_user_id)
+//            }
+//
+//            val post = Post(postRequest.company, postRequest.author, postRequest.title, postRequest.text, postRequest.photo_link)
+//
+//            for (jobOfferId in postRequest.jobOffersIds) {
+//                val jobOfferOptional = jobOfferRepository.findById(jobOfferId)
+//                if(jobOfferOptional.isPresent) post.jobOffers.add(jobOfferOptional.get())
+//                else return ResponseEntity(ApiResponse(false, "Job Offer with one of ids does not exists")
+//                        , HttpStatus.EXPECTATION_FAILED)
+//            }
+//
+//            val result = postRepository.save(post)
+//            val location = ServletUriComponentsBuilder
+//                    .fromCurrentContextPath().path("/posts/{id}")
+//                    .buildAndExpand(result.id).toUri()
+//
+//            return ResponseEntity.created(location).body(ApiResponse(true, "Post created successfully"))
+//
+//        } else {
+//            // author of the post is user
+//            val userOptional = userRepository.findById(postRequest.author)
+//
+//            if (userOptional.isPresent.not()) {
+//                return ResponseEntity(ApiResponse(false, "Such user does not exists"), HttpStatus.EXPECTATION_FAILED)
+//            } else if (userOptional.get().id != currentUser.id) {
+//                return ResponseEntity(ApiResponse(false, "You can only create post on your account."), HttpStatus.UNAUTHORIZED)
+//            }
+//
+//            val post = Post(postRequest.company, postRequest.author, postRequest.title, postRequest.text, postRequest.photo_link)
+//
+//            for (jobOfferId in postRequest.jobOffersIds) {
+//                val jobOfferOptional = jobOfferRepository.findById(jobOfferId)
+//                if(jobOfferOptional.isPresent) post.jobOffers.add(jobOfferOptional.get())
+//                else return ResponseEntity(ApiResponse(false, "Job Offer with one of ids does not exists")
+//                        , HttpStatus.EXPECTATION_FAILED)
+//            }
+//
+//            val result = postRepository.save(post)
+//            val location = ServletUriComponentsBuilder
+//                    .fromCurrentContextPath().path("/posts/{id}")
+//                    .buildAndExpand(result.id).toUri()
+//
+//            return ResponseEntity.created(location).body(ApiResponse(true, "Post created successfully"))
+//        }
+//    }
 
     @GetMapping("/posts")
     @PreAuthorize("hasRole('USER')")
@@ -169,16 +175,19 @@ class PostController {
         val responses: MutableList<PostResponse> = ArrayList<PostResponse>()
 
         for (post in posts) {
-            val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
-            for (jobOffer in post.jobOffers) {
+            val jobOffer = post.jobOffer
+            val jobOfferResponse: JobOfferResponse?
+
+            if (jobOffer == null) {
+                 jobOfferResponse = null
+            } else {
                 val company = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
                 val locations: MutableList<String> = ArrayList<String>()
                 for (location in jobOffer.locations) {
                     locations.add(location.location)
                 }
-
-                jobOfferResponses.add(JobOfferResponse(jobOffer.id, company, jobOffer.position,
-                        jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt))
+                jobOfferResponse = JobOfferResponse(jobOffer.id, company, jobOffer.position,
+                            jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt)
             }
 
             val author: Author
@@ -207,9 +216,15 @@ class PostController {
                 author = Author(user.id, user.fullname)
             }
 
-            responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt))
-        }
+            responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponse, post.createdAt))
 
+        }
         return responses
     }
+
+//    @GetMapping("/posts/following")
+//    @PreAuthorize("hasRole('USER')")
+//    fun getFollowingPosts(): List<PostResponse> {
+//
+//    }
 }
