@@ -49,4 +49,7 @@ class Company() : DateAudit() {
     // according to https://www.callicoder.com/spring-boot-spring-security-jwt-mysql-react-app-part-3/
     @OneToMany(mappedBy = "company")
     var job_offers: Set<JobOffer> = HashSet<JobOffer>()
+
+    @ManyToMany(mappedBy = "followingCompanies")
+    lateinit var followers: MutableSet<User>
 }
