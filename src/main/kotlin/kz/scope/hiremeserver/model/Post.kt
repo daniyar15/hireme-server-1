@@ -7,11 +7,12 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "post")
 class Post() : DateAudit() {
-    constructor(isCompany: Boolean, authorId: Long, title: String, text: String):this() {
+    constructor(isCompany: Boolean, authorId: Long, title: String, text: String, photoLink: String):this() {
         this.isCompany = isCompany
         this.authorId = authorId
         this.title = title
         this.text = text
+        this.photoLink = photoLink
     }
 
     @Id
@@ -26,6 +27,8 @@ class Post() : DateAudit() {
 
     @Size(max = 140)
     lateinit var text: String
+
+    lateinit var photoLink: String
 
     @ManyToMany(cascade = [
         CascadeType.PERSIST,

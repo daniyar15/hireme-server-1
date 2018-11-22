@@ -8,6 +8,7 @@ data class PostResponse (
         var author: Author,
         var title: String,
         var text: String,
+        var photo_link: String,
         var jobOffers: List<JobOfferResponse>,
         var createdAt: Instant
 )

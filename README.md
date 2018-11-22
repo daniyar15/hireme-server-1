@@ -132,6 +132,7 @@ Post = {
   },                 
   title,
   text,
+  photo_link,              // empty string if no photo 
   jobOffers,               // list of JobOfferInfo
   created_at
 }
@@ -145,6 +146,7 @@ PostForm = {
   author,                  // company id for company or user id for user
   title,
   text,
+  photo_link,    
   jobOffersIds             // list of ids of job offers
 }
 

@@ -59,4 +59,7 @@ class User() : DateAudit() {
 
     @OneToMany(mappedBy = "user")
     var managing: MutableList<EmployerInfo> = ArrayList<EmployerInfo>()
+
+    @OneToMany(mappedBy = "user")
+    var jobApplications: MutableList<JobOfferApplication> = ArrayList<JobOfferApplication>()
 }
