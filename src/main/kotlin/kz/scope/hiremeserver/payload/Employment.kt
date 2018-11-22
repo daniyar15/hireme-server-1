@@ -1,6 +1,7 @@
 package kz.scope.hiremeserver.payload
 
 data class Employment(
-        var position: String,
-        var company: String
+        var company: String,
+        var role: String,
+        var reference:Reference
 )

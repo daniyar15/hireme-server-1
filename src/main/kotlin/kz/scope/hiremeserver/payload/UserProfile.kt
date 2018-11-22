@@ -1,14 +1,18 @@
 package kz.scope.hiremeserver.payload
 
+import java.time.Instant
+
 data class UserProfile (
+
         var username: String,
-        var fullname: String,
+        var fullname:String,
         var location : String,
-        var employment: Employment,
-        var current_role : String,
         var education : Education,
         var hidden : Boolean,
-        var job_type : String,
-        var job_field : String,
-        var skills: String
+        var strong_skill : StrongSkill,
+        var urls: Urls,
+        var skills: String,
+        var employment: Employment,
+        var createdAt: Instant
+
 )

@@ -1,6 +1,8 @@
 package kz.scope.hiremeserver.model
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import kz.scope.hiremeserver.model.audit.DateAudit
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
@@ -13,22 +15,40 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "userInfo", uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("id"))])
 class UserInfo(): DateAudit() {
-    constructor(location: String, position: String, company: String, currentRole: String, university: String,
-                graduationYear: Int, graduationMonth: String, major: String, degree: String,
-                hidden: Boolean, jobType: String, jobField: String, skills: String) : this() {
+    constructor(location: String,
+                university: String,
+                graduation: String,
+                major: String,
+                degree: String,
+                hidden : Boolean,
+                strongSkillName: String,
+                strongSkilldescription:String,
+                github:String,
+                linked_in:String,
+                web:String,
+                company:String,
+                currentRole:String,
+                referenceName: String,
+                referenceNumber: String,
+                skills:String,
+                createdAt : Instant) : this() {
         this.location = location
-        this.position = position
-        this.company = company
-        this.currentRole = currentRole
         this.university = university
-        this.graduationYear = graduationYear
-        this.graduationMonth = graduationMonth
+        this.graduation = graduation
         this.major = major
         this.degree = degree
         this.hidden = hidden
-        this.jobType = jobType
-        this.jobField = jobField
+        this.strongSkillName = strongSkillName
+        this.strongSkilldescription = strongSkilldescription
+        this.github = github
+        this.linked_in = linked_in
+        this.web = web
+        this.company = company
+        this.currentRole = currentRole
+        this.referenceName = referenceName
+        this.referenceNumber = referenceNumber
         this.skills = skills
+        this.createdAt = createdAt
     }
 
     @Id
@@ -37,47 +57,39 @@ class UserInfo(): DateAudit() {
 
     @Size(max = 40)
     lateinit var location: String
-
-    @Size(max = 40)
-    lateinit var position: String
-
-    @Size(max = 40)
-    lateinit var company: String
-
-    @Size(max = 40)
-    @Column(name = "current_role")
-    lateinit var currentRole: String
-
+    //education information
     @Size(max = 40)
     lateinit var university: String
-
-    @Column(name = "graduation_year")
-    var graduationYear: Int = 0
-
-    @Size(max = 40)
-    @Column(name = "graduation_month")
-    lateinit var graduationMonth: String
-
+    @Column(name = "graduation_date")
+    var graduation: String = ""
     @Size(max = 40)
     lateinit var major: String
-
     @Size(max = 40)
     lateinit var degree: String
 
+
+
     var hidden: Boolean = false
+    //strongest skill data
+    lateinit var strongSkillName: String
+    lateinit var strongSkilldescription: String
+
+    var github : String = ""
+    var linked_in : String = ""
+    var web : String = ""
+
 
     @Size(max = 40)
-    @Column(name = "job_type")
-    lateinit var jobType: String
-
+    lateinit var company: String
     @Size(max = 40)
-    @Column(name = "job_field")
-    lateinit var jobField: String
+    @Column(name = "current_role")
+    lateinit var currentRole: String
+    var referenceName : String = ""
+    var referenceNumber : String = ""
 
     @Size(max = 40)
     lateinit var skills: String
 
     @OneToOne(mappedBy = "userInfo")
     lateinit var user: User
-
 }

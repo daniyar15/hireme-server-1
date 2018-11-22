@@ -45,6 +45,11 @@ class Company() : DateAudit() {
     var numEmployees: Int = 0
     lateinit var specialization: String
     lateinit var description: String
+    lateinit var experience: String
+    var hidden: Boolean = false
+    lateinit var github: String
+    lateinit var linked_in: String
+    lateinit var web: String
 
     // according to https://www.callicoder.com/spring-boot-spring-security-jwt-mysql-react-app-part-3/
     @OneToMany(mappedBy = "company")
