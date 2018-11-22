@@ -48,7 +48,6 @@ class UserControllerTest {
         val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
         Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
 
-
         // without authorization header
         mvc.perform(MockMvcRequestBuilders.get("/api/user/me"))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized)

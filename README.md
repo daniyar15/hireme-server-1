@@ -162,11 +162,11 @@ PostForm = {
 | Method | Path                             | Request                                                          | Response                   | Protected |
 | :----: | :--------------------------------| ---------------------------------------------------------------- | -------------------------- | :-------: |
 |  POST  | `/{username}/follow`             | PathVariable: <br>`{username}`                                   | `{success, message, id}`   |    Yes    |
-|   GET  | `/{username}/followers`          | PathVariable: <br>`{username}`                                   | [_UserSummary_]            |    Yes    |
-|   GET  | `/{username}/following`          | PathVariable: <br>`{username}`                                   | [_UserSummary_]            |    Yes    |
-|   GET  | `/{username}/following-companies`| PathVariable: <br>`{username}`                                   | [_CompanySummary_]         |    Yes    |
+|   GET  | `/{username}/followers`          | PathVariable: <br>`{username}`                                   | [_User_]                   |    Yes    |
+|   GET  | `/{username}/following`          | PathVariable: <br>`{username}`                                   | [_User_]                   |    Yes    |
+|   GET  | `/{username}/following-companies`| PathVariable: <br>`{username}`                                   | [_Company_]                |    Yes    |
 |  POST  | `/{company_id}/follow-company`   | PathVariable: <br>`{company_id}`                                 | `{success, message, id}`   |    Yes    |
-|   GET  | `/{company_id}/company-followers`| PathVariable: <br>`{company_id}`                                 | [_UserSummary_]            |    Yes    |
+|   GET  | `/{company_id}/company-followers`| PathVariable: <br>`{company_id}`                                 | [_User_]                   |    Yes    |
 | DELETE | `/{username}/unfollow`           | PathVariable: <br>`{username}`                                   | `{success, message, id}`   |    Yes    |
 | DELETE | `/{company_id}/unfollow-company` | PathVariable: <br>`{company_id}`                                 | `{success, message, id}`   |    Yes    |
 
