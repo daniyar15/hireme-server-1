@@ -7,6 +7,11 @@ import javax.persistence.*
 @Table(name = "job_offer_application", uniqueConstraints = [UniqueConstraint(columnNames = ["job_offer_id"]), UniqueConstraint(columnNames = ["user_id"])])
 class JobOfferApplication : DateAudit() {
 
+    constructor(jobOffer: JobOffer, user: User) : this() {
+        this.jobOffer = jobOffer
+        this.user = user
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
@@ -19,4 +24,5 @@ class JobOfferApplication : DateAudit() {
     @JoinColumn(name = "user_id")
     lateinit var user: User
 
+    var isViewed: Boolean = false
 }

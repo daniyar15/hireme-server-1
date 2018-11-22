@@ -114,7 +114,7 @@ JobOfferInfo = {
 
 ### Posts (news feed) - returns the last 10 posts for now
 
-`/api/post`
+`/api`
 
 | Method | Path               | Request                          | Response                   | Protected |
 | :----: | :------------------| -------------------------------- | -------------------------- | :-------: |
@@ -136,7 +136,7 @@ Post = {
   title,
   text,
   photo_link,              // empty string if no photo 
-  jobOfferInfo,            // when this field is not null, ignore other fields
+  [jobOfferInfo],          // list of job offers         
   created_at
 }
 
@@ -150,7 +150,7 @@ PostForm = {
   title,
   text,
   photo_link,    
-  jobOfferInfo             // when this field is not null, ignore other fields
+  [jobOfferIds]            // list of job offer ids
 }
 
 ```
@@ -182,5 +182,36 @@ UserSummary = {
     id,
     username,
     fullname
+}
+```
+
+### Job Applications
+
+`/api`
+
+| Method | Path                             | Request                         | Response                   | Protected |
+| :----: | :--------------------------------| --------------------------------| -------------------------- | :-------: |
+|  POST  | `/apply`                         | `PathVariable: {job_offer_id}`  | `{success, message, id}`   | Yes       |
+|  GET   | `/my-applications`               | ---                             | `[JobApplicationSummary]`  | Yes       |
+|  GET   | `/unviewed-num`                  | ---                             | `{unviewed_num}`           | Yes       |
+|  GET   | `/applied-to-my-companies`       | ---                             | `[ApplicationsByCompany]`   | Yes       |              
+
+```js
+
+ApplicationsByCompany = {
+    company_name,
+    [JobApplicationSummary]
+}
+
+JobApplicationSummary = {
+    id,
+    JobOfferSummary,
+    created_at
+}
+
+JobOfferSummary = {
+    id,
+    company_name,
+    position
 }
 ```
