@@ -233,4 +233,152 @@ class PostController {
 
         return responses
     }
+
+    @GetMapping("/posts-following")
+    @PreAuthorize("hasRole('USER')")
+    fun getPostsFollowing(@CurrentUser currentUser: UserPrincipal): List<PostResponse> {
+
+        // getting current user of class User
+        val currentUserId = currentUser.id
+        val currentUserOptional = userRepository.findById(currentUserId)
+        val curUser: User
+
+        if (currentUserOptional.isPresent) {
+            curUser = currentUserOptional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", currentUserId)
+        }
+
+        val relevantPosts: MutableList<Post> = ArrayList()
+        val responses: MutableList<PostResponse> = ArrayList()
+
+        // getting following entities
+        val followingUsers = curUser.following
+        val followingCompanies = curUser.followingCompanies
+
+        for (user in followingUsers) {
+            val tempList = postRepository.findByIsCompanyInAndAuthorIdIn(
+                    isCompany = false,
+                    authorId = user.id
+            )
+            relevantPosts.addAll(tempList)
+        }
+
+        for (company in followingCompanies) {
+            val tempList = postRepository.findByIsCompanyInAndAuthorIdIn(
+                    isCompany = true,
+                    authorId = company.id
+            )
+            relevantPosts.addAll(tempList)
+        }
+
+        relevantPosts.sort()
+
+        val posts: MutableList<Post> = ArrayList()
+
+        for (i in 0..9 ) {
+            if (i == relevantPosts.size) {
+                break
+            }
+            posts.add(relevantPosts[i])
+        }
+
+        for (post in posts) {
+            val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList()
+
+            for (jobOffer in post.jobOffers) {
+                val company = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
+                val locations: MutableList<String> = ArrayList<String>()
+                for (location in jobOffer.locations) {
+                    locations.add(location.location)
+                }
+                jobOfferResponses.add(JobOfferResponse(jobOffer.id, company, jobOffer.position, jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt))
+            }
+
+            val author: Author
+            if (post.isCompany) {
+                // author of the post is company
+                val companyOptional = companyRepository.findById(post.authorId)
+                val company: Company
+
+                if (companyOptional.isPresent) {
+                    company = companyOptional.get()
+                } else {
+                    throw ResourceNotFoundException("Company", "id", post.authorId)
+                }
+
+                author = Author(company.id, company.name)
+            } else {
+                val userOptional = userRepository.findById(post.authorId)
+                val user: User
+
+                if (userOptional.isPresent) {
+                    user = userOptional.get()
+                } else {
+                    throw ResourceNotFoundException("User", "id", post.authorId)
+                }
+
+                author = Author(user.id, user.fullname)
+            }
+
+            responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt))
+
+        }
+        return responses
+    }
+
+    @GetMapping("/my-posts")
+    @PreAuthorize("hasRole('USER')")
+    fun getMyPosts(@CurrentUser currentUser: UserPrincipal): List<PostResponse> {
+        val responses: MutableList<PostResponse> = ArrayList()
+
+        val posts = postRepository.findByIsCompanyInAndAuthorIdIn(
+                isCompany = false,
+                authorId = currentUser.id
+        )
+
+        for (post in posts) {
+
+            val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList()
+
+            for (jobOffer in post.jobOffers) {
+                val company = CompanyJobOfferResponse(jobOffer.company.id, jobOffer.company.name, jobOffer.company.logo)
+                val locations: MutableList<String> = ArrayList<String>()
+                for (location in jobOffer.locations) {
+                    locations.add(location.location)
+                }
+                jobOfferResponses.add(JobOfferResponse(jobOffer.id, company, jobOffer.position, jobOffer.responsibilities, jobOffer.qualifications, locations, jobOffer.createdAt, jobOffer.updatedAt))
+            }
+
+            val author: Author
+            if (post.isCompany) {
+                // author of the post is company
+                val companyOptional = companyRepository.findById(post.authorId)
+                val company: Company
+
+                if (companyOptional.isPresent) {
+                    company = companyOptional.get()
+                } else {
+                    throw ResourceNotFoundException("Company", "id", post.authorId)
+                }
+
+                author = Author(company.id, company.name)
+            } else {
+                val userOptional = userRepository.findById(post.authorId)
+                val user: User
+
+                if (userOptional.isPresent) {
+                    user = userOptional.get()
+                } else {
+                    throw ResourceNotFoundException("User", "id", post.authorId)
+                }
+
+                author = Author(user.id, user.fullname)
+            }
+
+            responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt))
+
+        }
+        return responses
+    }
 }
