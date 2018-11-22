@@ -156,6 +156,6 @@ PostForm = {
 
 | Method | Path                  | Request                                                       | Response                   | Protected |
 | :----: | :---------------------| ------------------------------------------------------------- | -------------------------- | :-------: |
-|  POST  | `/{user_id}/follow`   | PathVariable: <br>`{user_id}`                                 | `{success, message, id}`   |    Yes    |
-|   GET  | `/{user_id}/followers`| PathVariable: <br>`{user_id}`                                 | [_User_]                   |    Yes    |
-|   GET  | `/{user_id}/following`| PathVariable: <br>`{user_id}`                                 | [_User_]                   |    Yes    |
+|  POST  | `/{username}/follow`   | PathVariable: <br>`{username}`                                 | `{success, message, id}`   |    Yes    |
+|   GET  | `/{username}/followers`| PathVariable: <br>`{username}`                                 | [_User_]                   |    Yes    |
+|   GET  | `/{username}/following`| PathVariable: <br>`{username}`                                 | [_User_]                   |    Yes    |
