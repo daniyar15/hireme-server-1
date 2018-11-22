@@ -194,18 +194,19 @@ UserSummary = {
 |  POST  | `/apply`                         | `PathVariable: {job_offer_id}`  | `{success, message, id}`   | Yes       |
 |  GET   | `/my-applications`               | ---                             | `[JobApplicationSummary]`  | Yes       |
 |  GET   | `/unviewed-num`                  | ---                             | `{unviewed_num}`           | Yes       |
-|  GET   | `/applied-to-my-companies`       | ---                             | `[ApplicationsByCompany]`   | Yes       |              
+|  GET   | `/applications-of-my-companies`  | ---                             | `[ApplicationByCompany]`   | Yes       |              
 
 ```js
 
-ApplicationsByCompany = {
+ApplicationByCompany = {
     company_name,
-    [JobApplicationSummary]
+    [job_application_summaries]
 }
 
 JobApplicationSummary = {
     id,
-    JobOfferSummary,
+    userSummary,
+    job_offer_summary,
     created_at
 }
 

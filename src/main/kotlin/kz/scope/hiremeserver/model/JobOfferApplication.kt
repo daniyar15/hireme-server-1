@@ -4,8 +4,8 @@ import kz.scope.hiremeserver.model.audit.DateAudit
 import javax.persistence.*
 
 @Entity
-@Table(name = "job_offer_application", uniqueConstraints = [UniqueConstraint(columnNames = ["job_offer_id"]), UniqueConstraint(columnNames = ["user_id"])])
-class JobOfferApplication : DateAudit() {
+@Table(name = "job_offer_application")
+class JobOfferApplication() : DateAudit() {
 
     constructor(jobOffer: JobOffer, user: User) : this() {
         this.jobOffer = jobOffer
