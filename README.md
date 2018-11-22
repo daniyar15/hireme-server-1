@@ -91,8 +91,8 @@ CompanyInfo = {
 |  POST  | `/job-offer`                  | RequestBody: <br>_JobOfferInfo_     | `{success, message, id}`   |    Yes    |
 |   GET  | `/job-offers/{id}`            | PathVariable: <br>`{id}`            | _JobOfferInfo_             |    Yes    |
 |   GET  | `/job-offers/find-by-company` | RequestBody: <br>`{company_id}`     | [_JobOfferInfo_]           |    Yes    |
-|   GET  | `/job-offers/find-by-position`| RequestBody: <br>`{role}`           | [_JobOfferInfo_]           |    Yes    |
-|   GET  | `/job-offers/find-by-location`| RequestBody: <br>`{location}`         | [_JobOfferInfo_]           |    Yes    |
+|   GET  | `/job-offers/find-by-position`| RequestBody: <br>`{position}`       | [_JobOfferInfo_]           |    Yes    |
+|   GET  | `/job-offers/find-by-location`| RequestBody: <br>`{location}`       | [_JobOfferInfo_]           |    Yes    |
 
 ```js
 JobOfferInfo = {
