@@ -64,7 +64,7 @@ UserInfo = {
   job_type,             // Full-time/Part-time/Contractor/Intern
   job_field,            // [Frontend dev, backend dev, web dev, mobile]
   skills,               // [react, spring, kotlin, java, tensorflow]
-  createdAt,            // Date when entry was created
+  createdAt             // Date when entry was created
 }
 
 CompanyInfo = {
@@ -87,13 +87,13 @@ CompanyInfo = {
 
 `/api/job-offer`
 
-| Method | Path                          | Request                             | Response                   | Protected |
-| :----: | :---------------------------- | ----------------------------------- | -------------------------- | :-------: |
-|  POST  | `/job-offer`                  | RequestBody: <br>_JobOfferInfo_     | `{success, message, id}`   |    Yes    |
-|   GET  | `/job-offers/{id}`            | PathVariable: <br>`{id}`            | _JobOfferInfo_             |    Yes    |
-|   GET  | `/job-offers/find-by-company` | RequestBody: <br>`{company_id}`     | [_JobOfferInfo_]           |    Yes    |
-|   GET  | `/job-offers/find-by-position`| RequestBody: <br>`{position}`       | [_JobOfferInfo_]           |    Yes    |
-|   GET  | `/job-offers/find-by-location`| RequestBody: <br>`{location}`       | [_JobOfferInfo_]           |    Yes    |
+| Method | Path                          | Request                             | Response                             | Protected |
+| :----: | :---------------------------- | ----------------------------------- | ------------------------------------ | :-------: |
+|  POST  | `/job-offer`                  | RequestBody: <br>_JobOfferInfo_     | `{success, id of created offer, id}` |    Yes    |
+|   GET  | `/job-offers/{id}`            | PathVariable: <br>`{id}`            | _JobOfferInfo_                       |    Yes    |
+|   GET  | `/job-offers/find-by-company` | RequestBody: <br>`{company_id}`     | [_JobOfferInfo_]                     |    Yes    |
+|   GET  | `/job-offers/find-by-position`| RequestBody: <br>`{position}`       | [_JobOfferInfo_]                     |    Yes    |
+|   GET  | `/job-offers/find-by-location`| RequestBody: <br>`{location}`       | [_JobOfferInfo_]                     |    Yes    |
 
 ```js
 JobOfferInfo = {
@@ -121,8 +121,8 @@ JobOfferInfo = {
 |  POST  | `/post`            | RequestBody: <br>_PostForm_      | `{success, message, id}`   |    Yes    |
 |   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`         | _Post_                     |    Yes    |
 |   GET  | `/posts`           | --                               | [_Post_]                   |    Yes    |
-|   GET  | /posts-following   | --                               | [_Post_]                   |    Yes    |
-|   GET  | /my-posts          | --                               | [_Post_]                   |    Yes    |
+|   GET  | `/posts-following` | --                               | [_Post_]                   |    Yes    |
+|   GET  | `/my-posts`        | --                               | [_Post_]                   |    Yes    |
 
 Used in response
 ```js

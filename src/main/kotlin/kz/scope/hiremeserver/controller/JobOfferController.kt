@@ -195,7 +195,7 @@ class JobOfferController {
                 .fromCurrentContextPath().path("/job-offers/{id}")
                 .buildAndExpand(result.id).toUri()
 
-        return ResponseEntity.created(location).body(ApiResponse(true, "Job offer registered successfully"))
+        return ResponseEntity.created(location).body(ApiResponse(true, result.id.toString()))
     }
 
 }
