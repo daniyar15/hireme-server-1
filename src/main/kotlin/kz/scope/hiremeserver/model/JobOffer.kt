@@ -48,6 +48,10 @@ class JobOffer() : DateAudit() {
     @OneToMany(mappedBy = "jobOffer")
     var locations: MutableList<JobOfferLocation> = ArrayList<JobOfferLocation>()
 
-    @ManyToMany(mappedBy = "jobOffers")
-    lateinit var posts: Set<Post>
+    @NotNull
+    @OneToOne(mappedBy = "jobOffer")
+    lateinit var post: Post
+
+    @OneToMany(mappedBy = "jobOffer")
+    var applications: MutableList<JobOfferApplication> = ArrayList<JobOfferApplication>()
 }

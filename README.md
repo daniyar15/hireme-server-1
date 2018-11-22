@@ -34,14 +34,15 @@ You can change it in [application.properties](src/main/resources/application.pro
 
 ### Company
 
-`/api/company`
+`/api`
 
 | Method | Path              | Request                             | Response                   | Protected |
 | :----: | :---------------- | ----------------------------------- | -------------------------- | :-------: |
 |  POST  | `/company`        | RequestBody: <br>_CompanyInfo_      | `{success, message, id}`   |    Yes    |
 |   GET  | `/companies/{id}` | PathVariable: <br>`{id}`            | _CompanyInfo_              |     No    |
 |   GET  | `/companies/find` | RequestBody: <br>`{name, location}` | [_CompanyInfo_]            |     No    |
-
+|   GET  | `/my-companies`   | -                                   | [_CompanySummary_]         |     Yes    |
+ 
 ```js
 UserInfo = {
   username,            
@@ -120,6 +121,8 @@ JobOfferInfo = {
 |  POST  | `/post`            | RequestBody: <br>_PostForm_      | `{success, message, id}`   |    Yes    |
 |   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`         | _Post_                     |    Yes    |
 |   GET  | `/posts`           | --                               | [_Post_]                   |    Yes    |
+|   GET  | /posts-following   | --                               | [_Post_]                   |    Yes    |
+|   GET  | /my-posts          | --                               | [_Post_]                   |    Yes    |
 
 Used in response
 ```js
@@ -132,7 +135,8 @@ Post = {
   },                 
   title,
   text,
-  jobOffers,               // list of JobOfferInfo
+  photo_link,              // empty string if no photo 
+  jobOfferInfo,            // when this field is not null, ignore other fields
   created_at
 }
 
@@ -145,7 +149,8 @@ PostForm = {
   author,                  // company id for company or user id for user
   title,
   text,
-  jobOffersIds             // list of ids of job offers
+  photo_link,    
+  jobOfferInfo             // when this field is not null, ignore other fields
 }
 
 ```
@@ -164,3 +169,18 @@ PostForm = {
 |   GET  | `/{company_id}/company-followers`| PathVariable: <br>`{company_id}`                                 | [_User_]                   |    Yes    |
 | DELETE | `/{username}/unfollow`           | PathVariable: <br>`{username}`                                   | `{success, message, id}`   |    Yes    |
 | DELETE | `/{company_id}/unfollow-company` | PathVariable: <br>`{company_id}`                                 | `{success, message, id}`   |    Yes    |
+
+Used only in response
+```js
+CompanySummary = {
+    id,
+    name,
+    description
+}
+
+UserSummary = {
+    id,
+    username,
+    fullname
+}
+```

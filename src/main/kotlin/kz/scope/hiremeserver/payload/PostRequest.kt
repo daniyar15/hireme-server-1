@@ -5,5 +5,6 @@ data class PostRequest(
         var author: Long,
         var title: String,
         var text: String,
-        var jobOffersIds: List<Long>
+        var photo_link: String,
+        var jobOfferId: JobOfferRequest?
 )
