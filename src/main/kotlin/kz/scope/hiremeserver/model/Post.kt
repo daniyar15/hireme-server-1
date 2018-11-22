@@ -7,13 +7,14 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "post")
-class Post() : DateAudit() {
-    constructor(isCompany: Boolean, authorId: Long, title: String, text: String, photoLink: String):this() {
+class Post() : DateAudit(), Comparable<Post> {
+    constructor(isCompany: Boolean, authorId: Long, title: String, text: String, photoLink: String, jobOffer: JobOffer):this() {
         this.isCompany = isCompany
         this.authorId = authorId
         this.title = title
         this.text = text
         this.photoLink = photoLink
+        this.jobOffer = jobOffer
     }
 
     @Id
@@ -34,4 +35,14 @@ class Post() : DateAudit() {
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JoinColumn(name = "job_offer_id")
     var jobOffer: JobOffer? = null
+
+    override fun compareTo(other: Post): Int {
+        val thisYears = this.createdAt.epochSecond
+        val otherYears = this.createdAt.epochSecond
+
+        // descending order
+        val diffSeconds = (otherYears - thisYears)*31556952
+
+        return diffSeconds.toInt()
+    }
 }

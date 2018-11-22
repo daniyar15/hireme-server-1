@@ -121,6 +121,8 @@ JobOfferInfo = {
 |  POST  | `/post`            | RequestBody: <br>_PostForm_      | `{success, message, id}`   |    Yes    |
 |   GET  | `/posts/{id}`      | PathVariable: <br>`{id}`         | _Post_                     |    Yes    |
 |   GET  | `/posts`           | --                               | [_Post_]                   |    Yes    |
+|   GET  | /posts-following   | --                               | [_Post_]                   |    Yes    |
+|   GET  | /my-posts          | --                               | [_Post_]                   |    Yes    |
 
 Used in response
 ```js

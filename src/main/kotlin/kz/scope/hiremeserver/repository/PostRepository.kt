@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PostRepository : JpaRepository<Post, Long> {
+    fun findByIsCompanyInAndAuthorIdIn(isCompany: Boolean, authorId: Long): List<Post>
 }
