@@ -193,7 +193,7 @@ UserSummary = {
 | :----: | :--------------------------------| --------------------------------| -------------------------- | :-------: |
 |  POST  | `/apply`                         | `PathVariable: {job_offer_id}`  | `{success, message, id}`   | Yes       |
 |  GET   | `/my-applications`               | ---                             | `[JobApplicationSummary]`  | Yes       |
-|  GET   | `/unviewed-num`                  | ---                             | `{unviewed_num}`           | Yes       |
+|  GET   | `/unviewed-num`                  | ---                             | `unviewed_num (integer)`           | Yes       |
 |  GET   | `/applications-of-my-companies`  | ---                             | `[ApplicationByCompany]`   | Yes       |              
 
 ```js

@@ -125,6 +125,8 @@ class JobApplicationController {
                             application.jobOffer.position)
                     val userSummary = UserSummary(application.user.id, application.user.username, application.user.fullname)
                     jobApplicationsSummary.add(JobApplicationSummary(application.id, userSummary, jobOfferSummary, application.createdAt))
+                    application.isViewed = true
+                    jobApplicationRepository.save(application)
                 }
             }
             applicationsByCompany.add(ApplicationByCompany(company.name, jobApplicationsSummary))
@@ -132,4 +134,37 @@ class JobApplicationController {
         return applicationsByCompany
     }
 
+    @GetMapping("/unviewed-num")
+    @PreAuthorize("hasRole('USER')")
+    fun getUnviewedNum(@CurrentUser currentUser: UserPrincipal) : Int {
+        // getting current user of class User
+        val currentUserId = currentUser.id
+        val currentUserOptional = userRepository.findById(currentUserId)
+        val currUser: User
+
+        if (currentUserOptional.isPresent) {
+            currUser = currentUserOptional.get()
+        } else {
+            throw ResourceNotFoundException("User", "id", currentUserId)
+        }
+
+        val companies: MutableList<Company> = ArrayList()
+        for (m in currUser.managing) {
+            companies.add(m.company)
+        }
+
+        var counter: Int = 0
+        for (company in companies) {
+
+            for (job_offer in company.job_offers) {
+
+                for (application in job_offer.applications) {
+                    if (application.isViewed.not()) {
+                        counter += 1
+                    }
+                }
+            }
+        }
+        return counter
+    }
 }
