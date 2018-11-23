@@ -81,15 +81,13 @@ class UserInfo(): DateAudit() {
     var web : String = ""
 
 
-    @Size(max = 40)
     lateinit var company: String
-    @Size(max = 40)
+
     @Column(name = "current_role")
     lateinit var currentRole: String
     var referenceName : String = ""
     var referenceNumber : String = ""
 
-    @Size(max = 40)
     lateinit var skills: String
 
     @OneToOne(mappedBy = "userInfo")

@@ -45,42 +45,59 @@ You can change it in [application.properties](src/main/resources/application.pro
  
 ```js
 UserInfo = {
-  username,            
-  fullname,
+  username, 
+  fullname,  
   location,
-  employment: {         // Optional
-    position,
-    company
+  education: {            // Optional
+      university,         // name,              'Nazarbayev University'
+      graduation,  
+      major,              //                    'Computer Science'
+      degree              // Bachelor, Master, PhD
   },
-  current_role,         // SE, designer, marketing, sales, management, other
-  education: {          // Optional
-    university,         // name,              'Nazarbayev University'
-    graduation_year,    // graduation year    2020
-    graduation_month,   // graduation month   'June'
-    major,              //                    'Computer Science'
-    degree,             // Bachelor, Master, PhD
+  hidden,                 // Show in search     true
+  strong_skill: {
+      name, 
+      description
   },
-  hidden,               // Show in search     true
-  job_type,             // Full-time/Part-time/Contractor/Intern
-  job_field,            // [Frontend dev, backend dev, web dev, mobile]
-  skills,               // [react, spring, kotlin, java, tensorflow]
-  avarar_url,
-  createdAt             // Date when entry was created
+  urls: {
+      github,
+      linked_in,
+      web
+  },
+  skills,                 // [react, spring, kotlin, java, tensorflow]
+  employment: {           // Optional
+    company,
+    role,
+    reference: {
+        name,
+        number
+    }
+  },
+  avatar_url,
+  createdAt             // Date when entry was created 
 }
 
 CompanyInfo = {
   id,                   // Only in response
   name,                 // Google
+  location,             // Astana, Kazakhstan
+  specialization,       // Search Engine
+  employees,            // 100+
+  experience,
+  hidden,
+  urls: {
+      github,
+      linked_in,
+      web
+  }
   creator: {
     username,           // m_nny
     role                // Founder/HR/Team leader
   },
   logo_url,             // https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png
-  location,             // Astana, Kazakhstan
-  employee_number,      // 100+
-  specialization,       // Search Engine
-  description,           // Best search engine in the world
-  createdAt,            // Date when entry was created
+ 
+  description,          // Best search engine in the world
+  createdAt             // Date when entry was created
 }
 ```
 

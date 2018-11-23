@@ -25,7 +25,6 @@ class Post() : DateAudit(), Comparable<Post> {
     @Size(max = 50)
     lateinit var title: String
 
-    @Size(max = 140)
     lateinit var text: String
 
     lateinit var photoLink: String

@@ -35,7 +35,6 @@ class JobOffer() : DateAudit() {
     @NotNull
     lateinit var company: Company
 
-    @Size(max = 240)
     @Column(name = "responsibilities")
     lateinit var responsibilities: String
 
