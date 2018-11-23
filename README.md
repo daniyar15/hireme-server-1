@@ -64,6 +64,7 @@ UserInfo = {
   job_type,             // Full-time/Part-time/Contractor/Intern
   job_field,            // [Frontend dev, backend dev, web dev, mobile]
   skills,               // [react, spring, kotlin, java, tensorflow]
+  avarar_url,
   createdAt             // Date when entry was created
 }
 
@@ -131,7 +132,8 @@ Post = {
   company,                 // is company (true - author is company, false - author is user)
   author: {
       id,                  // company id for company or user id for user
-      name                 // fullname for user or company name for company
+      name,                // fullname for user or company name for company
+      avatar
   },                 
   title,
   text,
@@ -193,7 +195,7 @@ UserSummary = {
 | :----: | :--------------------------------| --------------------------------| -------------------------- | :-------: |
 |  POST  | `/apply`                         | `PathVariable: {job_offer_id}`  | `{success, message, id}`   | Yes       |
 |  GET   | `/my-applications`               | ---                             | `[JobApplicationSummary]`  | Yes       |
-|  GET   | `/unviewed-num`                  | ---                             | `unviewed_num (integer)`           | Yes       |
+|  GET   | `/unviewed-num`                  | ---                             | `unviewed_num (integer)`   | Yes       |
 |  GET   | `/applications-of-my-companies`  | ---                             | `[ApplicationByCompany]`   | Yes       |              
 
 ```js

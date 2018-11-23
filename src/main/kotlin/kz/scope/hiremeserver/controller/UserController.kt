@@ -63,6 +63,7 @@ class UserController {
             user.userInfo.github = userProfile.urls.github
             user.userInfo.linked_in = userProfile.urls.linked_in
             user.userInfo.web = userProfile.urls.web
+            user.userInfo.avatar_url = userProfile.avatar_url
 
             userInfoRepository.save(user.userInfo)
             val result = userRepository.save(user)
@@ -110,6 +111,7 @@ class UserController {
                                     user.userInfo.referenceNumber
                             )
                     ),
+                    user.userInfo.avatar_url,
                     user.userInfo.createdAt
             )
         } else throw ResourceNotFoundException("Profile", "username", currentUser.username)
@@ -160,6 +162,7 @@ class UserController {
                                     user.userInfo.referenceNumber
                             )
                     ),
+                    user.userInfo.avatar_url,
                     user.userInfo.createdAt
             )
         } else throw ResourceNotFoundException("Profile", "username", username)

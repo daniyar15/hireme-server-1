@@ -105,6 +105,7 @@ class AuthController {
                 "",
                 "",
                 "",
+                "",
                 now())
 
         userInfoRepository.save(user.userInfo)

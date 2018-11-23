@@ -31,6 +31,7 @@ class UserInfo(): DateAudit() {
                 referenceName: String,
                 referenceNumber: String,
                 skills:String,
+                avatar_url: String,
                 createdAt : Instant) : this() {
         this.location = location
         this.university = university
@@ -48,6 +49,7 @@ class UserInfo(): DateAudit() {
         this.referenceName = referenceName
         this.referenceNumber = referenceNumber
         this.skills = skills
+        this.avatar_url = avatar_url
         this.createdAt = createdAt
     }
 
@@ -92,4 +94,6 @@ class UserInfo(): DateAudit() {
 
     @OneToOne(mappedBy = "userInfo")
     lateinit var user: User
+
+    lateinit var avatar_url: String
 }

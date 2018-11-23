@@ -13,6 +13,7 @@ data class UserProfile (
         var urls: Urls,
         var skills: String,
         var employment: Employment,
+        var avatar_url: String,
         var createdAt: Instant
 
 )

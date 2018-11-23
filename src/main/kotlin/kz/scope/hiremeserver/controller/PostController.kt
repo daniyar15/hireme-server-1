@@ -77,7 +77,7 @@ class PostController {
                 throw ResourceNotFoundException("Company", "id", post.authorId)
             }
 
-            author = Author(company.id, company.name)
+            author = Author(company.id, company.name, company.logo)
         } else {
             val userOptional = userRepository.findById(post.authorId)
             val user: User
@@ -88,7 +88,7 @@ class PostController {
                 throw ResourceNotFoundException("User", "id", post.authorId)
             }
 
-            author = Author(user.id, user.fullname)
+            author = Author(user.id, user.fullname, user.userInfo.avatar_url)
         }
         return PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt)
     }
@@ -214,7 +214,7 @@ class PostController {
                     throw ResourceNotFoundException("Company", "id", post.authorId)
                 }
 
-                author = Author(company.id, company.name)
+                author = Author(company.id, company.name, company.logo)
             } else {
                 val userOptional = userRepository.findById(post.authorId)
                 val user: User
@@ -225,7 +225,7 @@ class PostController {
                     throw ResourceNotFoundException("User", "id", post.authorId)
                 }
 
-                author = Author(user.id, user.fullname)
+                author = Author(user.id, user.fullname, user.userInfo.avatar_url)
             }
 
             responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt))
@@ -307,7 +307,7 @@ class PostController {
                     throw ResourceNotFoundException("Company", "id", post.authorId)
                 }
 
-                author = Author(company.id, company.name)
+                author = Author(company.id, company.name, company.logo)
             } else {
                 val userOptional = userRepository.findById(post.authorId)
                 val user: User
@@ -318,7 +318,7 @@ class PostController {
                     throw ResourceNotFoundException("User", "id", post.authorId)
                 }
 
-                author = Author(user.id, user.fullname)
+                author = Author(user.id, user.fullname, user.userInfo.avatar_url)
             }
 
             responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt))
@@ -362,7 +362,7 @@ class PostController {
                     throw ResourceNotFoundException("Company", "id", post.authorId)
                 }
 
-                author = Author(company.id, company.name)
+                author = Author(company.id, company.name, company.logo)
             } else {
                 val userOptional = userRepository.findById(post.authorId)
                 val user: User
@@ -373,7 +373,7 @@ class PostController {
                     throw ResourceNotFoundException("User", "id", post.authorId)
                 }
 
-                author = Author(user.id, user.fullname)
+                author = Author(user.id, user.fullname, user.userInfo.avatar_url)
             }
 
             responses.add(PostResponse(post.id, post.isCompany, author, post.title, post.text, post.photoLink, jobOfferResponses, post.createdAt))
