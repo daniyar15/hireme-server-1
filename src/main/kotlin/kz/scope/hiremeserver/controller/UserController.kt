@@ -1,8 +1,11 @@
 package kz.scope. hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
+import kz.scope.hiremeserver.model.Log
 import kz.scope.hiremeserver.model.UserInfo
 import kz.scope.hiremeserver.payload.*
+import kz.scope.hiremeserver.repository.LogRepository
 import kz.scope.hiremeserver.repository.UserInfoRepository
 import kz.scope.hiremeserver.repository.UserRepository
 import kz.scope.hiremeserver.security.CurrentUser
@@ -22,6 +25,11 @@ private val logger1 = LoggerFactory.getLogger(UserController::class.java)
 class UserController {
 
     @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
+    @Autowired
     lateinit var userRepository: UserRepository
 
     @Autowired
@@ -30,6 +38,17 @@ class UserController {
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
     fun getCurrentUser(@CurrentUser currentUser: UserPrincipal): UserSummary {
+
+        logRepository.save(Log(
+                controller = "UserController",
+                methodName = "getCurrentUser",
+                httpMethod = "GET",
+                urlMapping = "/user/me",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         return UserSummary(currentUser.id, currentUser.username, currentUser.fullname)
     }
 
@@ -37,6 +56,16 @@ class UserController {
     @PostMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
     fun postCurrentUserProfile(@CurrentUser currentUser: UserPrincipal, @RequestBody userProfile: UserProfile): ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "UserController",
+                methodName = "postCurrentUserProfile",
+                httpMethod = "POST",
+                urlMapping = "/user/me",
+                protected = true,
+                requestBody = gson.toJson(userProfile),
+                requestParam = "{}")
+        )
 
         val user = userRepository.findByUsername(userProfile.username)
 
@@ -81,6 +110,17 @@ class UserController {
     @GetMapping("/user/me/profile")
     @PreAuthorize("hasRole('USER')")
     fun getCurrentUserProfile(@CurrentUser currentUser: UserPrincipal) : UserProfile{
+
+        logRepository.save(Log(
+                controller = "UserController",
+                methodName = "getCurrentUserProfile",
+                httpMethod = "GET",
+                urlMapping = "/user/me/profile",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         val user = userRepository.findByUsername(currentUser.username)
         if (user != null) {
             return UserProfile(
@@ -119,18 +159,51 @@ class UserController {
 
     @GetMapping("/user/checkUsernameAvailability")
     fun checkUsernameAvailability(@RequestParam(value = "username") username: String): UserIdentityAvailability {
+
+        logRepository.save(Log(
+                controller = "UserController",
+                methodName = "checkUsernameAvailability",
+                httpMethod = "GET",
+                urlMapping = "/user/checkUsernameAvailability",
+                protected = false,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         val isAvailable = !userRepository.existsByUsername(username)
         return UserIdentityAvailability(isAvailable)
     }
 
     @GetMapping("/user/checkEmailAvailability")
     fun checkEmailAvailability(@RequestParam(value = "email") email: String): UserIdentityAvailability {
+
+        logRepository.save(Log(
+                controller = "UserController",
+                methodName = "checkEmailAvailability",
+                httpMethod = "GET",
+                urlMapping = "/user/checkEmailAvailability",
+                protected = false,
+                requestBody = "{}",
+                requestParam = "{email: " + email + "}")
+        )
+
         val isAvailable = !userRepository.existsByEmail(email)
         return UserIdentityAvailability(isAvailable)
     }
 
     @GetMapping("/users/{username}")
     fun getUserProfile(@PathVariable(value = "username") username: String): UserProfile {
+
+        logRepository.save(Log(
+                controller = "UserController",
+                methodName = "getUserProfile",
+                httpMethod = "GET",
+                urlMapping = "/users/{username}",
+                protected = false,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         val user = userRepository.findByUsername(username)
 
         if (user != null) {

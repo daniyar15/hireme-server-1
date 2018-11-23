@@ -1,11 +1,14 @@
 package kz.scope.hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
 import kz.scope.hiremeserver.model.EmployerInfo
+import kz.scope.hiremeserver.model.Log
 import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.CompanyRepository
 import kz.scope.hiremeserver.repository.EmployerInfoRepository
+import kz.scope.hiremeserver.repository.LogRepository
 import kz.scope.hiremeserver.repository.UserRepository
 import kz.scope.hiremeserver.security.CurrentUser
 import kz.scope.hiremeserver.security.UserPrincipal
@@ -27,6 +30,11 @@ private val logger1 = LoggerFactory.getLogger(CompanyController::class.java)
 class CompanyController {
 
     @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
+    @Autowired
     lateinit var companyRepository: CompanyRepository
 
     @Autowired
@@ -37,6 +45,15 @@ class CompanyController {
 
     @GetMapping("companies/{id}")
     fun getCompanyProfile(@PathVariable(value = "id") id: Long): CompanyProfile {
+        logRepository.save(Log(
+                controller = "CompanyController",
+                methodName = "getCompanyProfile",
+                httpMethod = "GET",
+                urlMapping = "/companies/{id}",
+                protected = false,
+                requestBody = "{}",
+                requestParam = "{id: }" + id)
+        )
         val companyOptional = companyRepository.findById(id)
         val company: Company
 
@@ -70,6 +87,16 @@ class CompanyController {
     @GetMapping("companies/find")
     fun getCompanyProfile(@RequestParam(value = "name", required = true) name: String,
                           @RequestParam(value = "location", required = true) location: String): List<CompanyProfile> {
+        logRepository.save(Log(
+                controller = "CompanyController",
+                methodName = "getCompanyProfile",
+                httpMethod = "GET",
+                urlMapping = "/companies/find",
+                protected = false,
+                requestBody = "{}",
+                requestParam = "{name: " + name + ", location: " + location + "}")
+        )
+
         val companyList = companyRepository.findByNameAndLocation(name, location)
 
         if (companyList.isEmpty()) throw ResourceNotFoundException("Company", "name", name)
@@ -105,6 +132,16 @@ class CompanyController {
     @PostMapping("company")
     @PreAuthorize("hasRole('USER')")
     fun createCompany(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody companyRequest: CompanyRequest) : ResponseEntity<*> {
+        logRepository.save(Log(
+                controller = "CompanyController",
+                methodName = "createCompany",
+                httpMethod = "POST",
+                urlMapping = "/company",
+                protected = true,
+                requestBody = gson.toJson(companyRequest),
+                requestParam = "{}")
+        )
+
         val user = userRepository.findByUsername(companyRequest.creator.username)
 
         if (user == null) {

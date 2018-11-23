@@ -1,15 +1,10 @@
 package kz.scope.hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
-import kz.scope.hiremeserver.model.Company
-import kz.scope.hiremeserver.model.JobOffer
-import kz.scope.hiremeserver.model.JobOfferLocation
-import kz.scope.hiremeserver.model.User
+import kz.scope.hiremeserver.model.*
 import kz.scope.hiremeserver.payload.*
-import kz.scope.hiremeserver.repository.CompanyRepository
-import kz.scope.hiremeserver.repository.JobOfferLocationRepository
-import kz.scope.hiremeserver.repository.JobOfferRepository
-import kz.scope.hiremeserver.repository.UserRepository
+import kz.scope.hiremeserver.repository.*
 import kz.scope.hiremeserver.security.CurrentUser
 import kz.scope.hiremeserver.security.UserPrincipal
 import org.slf4j.LoggerFactory
@@ -28,6 +23,11 @@ private val logger1 = LoggerFactory.getLogger(JobOfferController::class.java)
 class JobOfferController {
 
     @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
+    @Autowired
     lateinit var jobOfferRepository: JobOfferRepository
 
     @Autowired
@@ -42,6 +42,17 @@ class JobOfferController {
     @GetMapping("/job-offers/{id}")
     @PreAuthorize("hasRole('USER')")
     fun getJobOffer(@PathVariable(value = "id") id: Long): JobOfferResponse {
+
+        logRepository.save(Log(
+                controller = "JobOfferController",
+                methodName = "getJobOffer",
+                httpMethod = "GET",
+                urlMapping = "/job-offers/{id}",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{id: " + id + "}")
+        )
+
         val jobOfferOptional = jobOfferRepository.findById(id)
         val jobOffer: JobOffer
 
@@ -64,6 +75,16 @@ class JobOfferController {
     @PreAuthorize("hasRole('USER')")
     fun getJobOfferByCompany(@RequestParam(value = "company_id", required = true) company_id: Long)
             : List<JobOfferResponse> {
+
+        logRepository.save(Log(
+                controller = "JobOfferController",
+                methodName = "getJobOfferByCompany",
+                httpMethod = "GET",
+                urlMapping = "/job-offers/find-by-company",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{company_id: " + company_id + "}")
+        )
 
         val companyOptional = companyRepository.findById(company_id)
         val company: Company
@@ -97,6 +118,16 @@ class JobOfferController {
     fun getJobOfferByPosition(@RequestParam(value = "position", required = true) position: String)
             : List<JobOfferResponse> {
 
+        logRepository.save(Log(
+                controller = "JobOfferController",
+                methodName = "getJobOfferByPosition",
+                httpMethod = "GET",
+                urlMapping = "/job-offers/find-by-position",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{position: " + position + "}")
+        )
+
         val jobOffers = jobOfferRepository.findByPosition(position)
         val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
 
@@ -119,6 +150,16 @@ class JobOfferController {
     fun getJobOfferByLocation(@RequestParam(value = "location", required = true) locationToSearch: String)
             : List<JobOfferResponse> {
 
+        logRepository.save(Log(
+                controller = "JobOfferController",
+                methodName = "getJobOfferByLocation",
+                httpMethod = "GET",
+                urlMapping = "/job-offers/find-by-location",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{location: " + locationToSearch + "}")
+        )
+
         val jobOfferLocations = jobofferLocationRepository.findByLocation(locationToSearch)
         val jobOfferResponses: MutableList<JobOfferResponse> = ArrayList<JobOfferResponse>()
         for (jobOfferLocation in jobOfferLocations) {
@@ -140,6 +181,17 @@ class JobOfferController {
     @PostMapping("/job-offer")
     @PreAuthorize("hasRole('USER')")
     fun createJobOffer(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody jobOfferRequest: JobOfferRequest) : ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "JobOfferController",
+                methodName = "createJobOffer",
+                httpMethod = "POST",
+                urlMapping = "/job-offer",
+                protected = true,
+                requestBody = gson.toJson(jobOfferRequest),
+                requestParam = "{}")
+        )
+
         val companyOptional = companyRepository.findById(jobOfferRequest.company.company_id)
         val company: Company
 

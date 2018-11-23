@@ -1,10 +1,13 @@
 package kz.scope.hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.AppException
+import kz.scope.hiremeserver.model.Log
 import kz.scope.hiremeserver.model.RoleName
 import kz.scope.hiremeserver.model.User
 import kz.scope.hiremeserver.model.UserInfo
 import kz.scope.hiremeserver.payload.*
+import kz.scope.hiremeserver.repository.LogRepository
 import kz.scope.hiremeserver.repository.RoleRepository
 import kz.scope.hiremeserver.repository.UserInfoRepository
 import kz.scope.hiremeserver.repository.UserRepository
@@ -33,6 +36,11 @@ import javax.validation.Valid
 class AuthController {
 
     @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
+    @Autowired
     lateinit var authenticationManager: AuthenticationManager
 
     @Autowired
@@ -52,6 +60,15 @@ class AuthController {
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest): ResponseEntity<*> {
+        logRepository.save(Log(
+                controller = "AuthController",
+                methodName = "authenticateUser",
+                httpMethod = "POST",
+                urlMapping = "/api/auth/signin",
+                protected = false,
+                requestBody = gson.toJson(loginRequest),
+                requestParam = "{}")
+        )
 
         val authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
@@ -68,6 +85,17 @@ class AuthController {
 
     @PostMapping("/signup")
     fun registerUser(@Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "AuthController",
+                methodName = "registerUser",
+                httpMethod = "POST",
+                urlMapping = "/api/auth/signup",
+                protected = false,
+                requestBody = gson.toJson(signUpRequest),
+                requestParam = "{}")
+        )
+
         if (userRepository.existsByUsername(signUpRequest.username)) {
             return ResponseEntity(ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST)

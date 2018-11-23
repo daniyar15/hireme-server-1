@@ -1,15 +1,10 @@
 package kz.scope.hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
-import kz.scope.hiremeserver.model.Company
-import kz.scope.hiremeserver.model.JobOffer
-import kz.scope.hiremeserver.model.JobOfferApplication
-import kz.scope.hiremeserver.model.User
+import kz.scope.hiremeserver.model.*
 import kz.scope.hiremeserver.payload.*
-import kz.scope.hiremeserver.repository.CompanyRepository
-import kz.scope.hiremeserver.repository.JobApplicationRepository
-import kz.scope.hiremeserver.repository.JobOfferRepository
-import kz.scope.hiremeserver.repository.UserRepository
+import kz.scope.hiremeserver.repository.*
 import kz.scope.hiremeserver.security.CurrentUser
 import kz.scope.hiremeserver.security.UserPrincipal
 import org.slf4j.LoggerFactory
@@ -24,6 +19,12 @@ private val logger1 = LoggerFactory.getLogger(CompanyController::class.java)
 @RestController
 @RequestMapping("/api")
 class JobApplicationController {
+
+    @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
     @Autowired
     lateinit var companyRepository: CompanyRepository
 
@@ -40,6 +41,17 @@ class JobApplicationController {
     @PreAuthorize("hasRole('USER')")
     fun apply(@RequestParam(value = "job_offer_id", required = true) jobOfferId: Long,
               @CurrentUser currentUser: UserPrincipal) : ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "JobApplicationController",
+                methodName = "apply",
+                httpMethod = "POST",
+                urlMapping = "/apply",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{job_offer_id: " + jobOfferId + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -74,6 +86,17 @@ class JobApplicationController {
     @GetMapping("/my-applications")
     @PreAuthorize("hasRole('USER')")
     fun getMyApplications(@CurrentUser currentUser: UserPrincipal) : List<JobApplicationSummary> {
+
+        logRepository.save(Log(
+                controller = "JobApplicationController",
+                methodName = "getMyApplications",
+                httpMethod = "GET",
+                urlMapping = "/my-applications",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -98,6 +121,17 @@ class JobApplicationController {
     @GetMapping("/applications-of-my-companies")
     @PreAuthorize("hasRole('USER')")
     fun getApplicationsOfCompanies(@CurrentUser currentUser: UserPrincipal) : List<ApplicationByCompany> {
+
+        logRepository.save(Log(
+                controller = "JobApplicationController",
+                methodName = "getApplicationsOfCompanies",
+                httpMethod = "GET",
+                urlMapping = "/applications-of-my-companies",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -137,6 +171,17 @@ class JobApplicationController {
     @GetMapping("/unviewed-num")
     @PreAuthorize("hasRole('USER')")
     fun getUnviewedNum(@CurrentUser currentUser: UserPrincipal) : Int {
+
+        logRepository.save(Log(
+                controller = "JobApplicationController",
+                methodName = "getUnviewedNum",
+                httpMethod = "GET",
+                urlMapping = "/unviewed-num",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)

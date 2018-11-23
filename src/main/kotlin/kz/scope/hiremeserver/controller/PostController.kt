@@ -1,14 +1,13 @@
 package kz.scope.hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
+import kz.scope.hiremeserver.model.Log
 import kz.scope.hiremeserver.model.Post
 import kz.scope.hiremeserver.model.User
 import kz.scope.hiremeserver.payload.*
-import kz.scope.hiremeserver.repository.CompanyRepository
-import kz.scope.hiremeserver.repository.JobOfferRepository
-import kz.scope.hiremeserver.repository.PostRepository
-import kz.scope.hiremeserver.repository.UserRepository
+import kz.scope.hiremeserver.repository.*
 import kz.scope.hiremeserver.security.CurrentUser
 import kz.scope.hiremeserver.security.UserPrincipal
 import org.slf4j.LoggerFactory
@@ -30,6 +29,11 @@ private val logger1 = LoggerFactory.getLogger(PostController::class.java)
 class PostController {
 
     @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
+    @Autowired
     lateinit var postRepository: PostRepository
 
     @Autowired
@@ -44,6 +48,17 @@ class PostController {
     @GetMapping("/posts/{id}")
     @PreAuthorize("hasRole('USER')")
     fun getPost(@PathVariable(value = "id") id: Long): PostResponse {
+
+        logRepository.save(Log(
+                controller = "PostController",
+                methodName = "getPost",
+                httpMethod = "GET",
+                urlMapping = "/posts/{id}",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{id: " + id + "}")
+        )
+
         val postOptional = postRepository.findById(id)
         val post: Post
 
@@ -97,6 +112,17 @@ class PostController {
     @PreAuthorize("hasRole('USER')")
     fun addPost(@CurrentUser currentUser: UserPrincipal, @Valid @RequestBody postRequest: PostRequest)
             : ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "PostController",
+                methodName = "addPost",
+                httpMethod = "POST",
+                urlMapping = "/post",
+                protected = true,
+                requestBody = gson.toJson(postRequest),
+                requestParam = "{}")
+        )
+
         if (postRequest.company) {
             // author of the post is company
             val companyOptional = companyRepository.findById(postRequest.author)
@@ -184,6 +210,17 @@ class PostController {
     @GetMapping("/posts")
     @PreAuthorize("hasRole('USER')")
     fun getPosts(): List<PostResponse> {
+
+        logRepository.save(Log(
+                controller = "PostController",
+                methodName = "getPosts",
+                httpMethod = "GET",
+                urlMapping = "/posts",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         val topTen: PageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt")
         val posts = postRepository.findAll(topTen)
 
@@ -237,6 +274,16 @@ class PostController {
     @GetMapping("/posts-following")
     @PreAuthorize("hasRole('USER')")
     fun getPostsFollowing(@CurrentUser currentUser: UserPrincipal): List<PostResponse> {
+
+        logRepository.save(Log(
+                controller = "PostController",
+                methodName = "getPostsFollowing",
+                httpMethod = "GET",
+                urlMapping = "/posts-following",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
 
         // getting current user of class User
         val currentUserId = currentUser.id
@@ -330,6 +377,17 @@ class PostController {
     @GetMapping("/my-posts")
     @PreAuthorize("hasRole('USER')")
     fun getMyPosts(@CurrentUser currentUser: UserPrincipal): List<PostResponse> {
+
+        logRepository.save(Log(
+                controller = "PostController",
+                methodName = "getMyPosts",
+                httpMethod = "GET",
+                urlMapping = "/my-posts",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{}")
+        )
+
         val responses: MutableList<PostResponse> = ArrayList()
 
         val posts = postRepository.findByIsCompanyInAndAuthorIdIn(

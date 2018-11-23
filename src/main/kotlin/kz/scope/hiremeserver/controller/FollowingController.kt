@@ -1,10 +1,13 @@
 package kz.scope.hiremeserver.controller
 
+import com.google.gson.Gson
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
+import kz.scope.hiremeserver.model.Log
 import kz.scope.hiremeserver.model.User
 import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.CompanyRepository
+import kz.scope.hiremeserver.repository.LogRepository
 import kz.scope.hiremeserver.repository.UserRepository
 import kz.scope.hiremeserver.security.CurrentUser
 import kz.scope.hiremeserver.security.UserPrincipal
@@ -18,6 +21,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 @RequestMapping("/api")
 class FollowingController {
     @Autowired
+    lateinit var logRepository: LogRepository
+
+    var gson = Gson()
+
+    @Autowired
     lateinit var userRepository: UserRepository
 
     @Autowired
@@ -26,6 +34,17 @@ class FollowingController {
     @GetMapping("/{username}/following")
     @PreAuthorize("hasRole('USER')")
     fun getFollowingUsers(@PathVariable(value = "username") username: String): List<UserSummary> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "getFollowingUsers",
+                httpMethod = "GET",
+                urlMapping = "/{username}/following",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         // working with the target user
         val targetUser = userRepository.findByUsername(username)
 
@@ -47,6 +66,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun getFollowingCompanies(@PathVariable(value = "username") username: String): List<CompanySummary> {
         // working with the target user
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "getFollowingCompanies",
+                httpMethod = "GET",
+                urlMapping = "/{username}/following-companies",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         val targetUser = userRepository.findByUsername(username)
 
         if (targetUser != null) {
@@ -66,6 +96,17 @@ class FollowingController {
     @GetMapping("/{username}/followers")
     @PreAuthorize("hasRole('USER')")
     fun getFollowedUsers(@PathVariable(value = "username") username: String): List<UserSummary> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "getFollowedUsers",
+                httpMethod = "GET",
+                urlMapping = "/{username}/followers",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         val targetUser = userRepository.findByUsername(username)
 
         if (targetUser != null) {
@@ -85,6 +126,17 @@ class FollowingController {
     @GetMapping("/{company_id}/company-followers")
     @PreAuthorize("hasRole('USER')")
     fun getCompanyFollowers(@PathVariable(value = "company_id") company_id: Long): List<UserSummary> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "getCompanyFollowers",
+                httpMethod = "GET",
+                urlMapping = "/{company_id}/company-followers",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{company_id: " + company_id + "}")
+        )
+
         val targetCompanyOptional = companyRepository.findById(company_id)
         val targetCompany: Company
 
@@ -107,6 +159,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun follow(@CurrentUser currentUser: UserPrincipal,
                @PathVariable(value = "username") username: String): ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "follow",
+                httpMethod = "POST",
+                urlMapping = "/{username}/follow",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -144,6 +207,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun unfollow(@CurrentUser currentUser: UserPrincipal,
                  @PathVariable(value = "username") username: String): ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "unfollow",
+                httpMethod = "DELETE",
+                urlMapping = "/{username}/unfollow",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -181,6 +255,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun followCompany(@CurrentUser currentUser: UserPrincipal,
                       @PathVariable(value = "company_id") company_id: Long): ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "followCompany",
+                httpMethod = "POST",
+                urlMapping = "/{company_id}/follow-company",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{company_id: " + company_id + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -216,6 +301,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun unfollowCompany(@CurrentUser currentUser: UserPrincipal,
                         @PathVariable(value = "company_id") company_id: Long): ResponseEntity<*> {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "unfollowCompany",
+                httpMethod = "DELETE",
+                urlMapping = "/{company_id}/unfollow-company",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{company_id: " + company_id + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -251,6 +347,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun isFollowingCompany(@CurrentUser currentUser: UserPrincipal,
                            @PathVariable(value = "company_id") company_id: Long): Boolean {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "isFollowingCompany",
+                httpMethod = "GET",
+                urlMapping = "/{company_id}/is-following-company",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{company_id: " + company_id + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
@@ -278,6 +385,17 @@ class FollowingController {
     @PreAuthorize("hasRole('USER')")
     fun isFollowing(@CurrentUser currentUser: UserPrincipal,
                     @PathVariable(value = "username") username: String): Boolean {
+
+        logRepository.save(Log(
+                controller = "FollowingController",
+                methodName = "isFollowing",
+                httpMethod = "GET",
+                urlMapping = "/{username}/is-following",
+                protected = true,
+                requestBody = "{}",
+                requestParam = "{username: " + username + "}")
+        )
+
         // getting current user of class User
         val currentUserId = currentUser.id
         val currentUserOptional = userRepository.findById(currentUserId)
