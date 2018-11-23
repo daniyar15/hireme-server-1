@@ -31,154 +31,154 @@ class UserControllerTest {
     @Autowired
     private lateinit var objMapper: ObjectMapper
 
-    @Test
-    @Transactional
-    fun getCurrentUser() {
-        // signing in
-        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
-                        usernameOrEmail = existingUser.username,
-                        password = existingUser.password)))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andReturn()
-
-        objMapper.registerKotlinModule()
-        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
-        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
-
-
-        // without authorization header
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/me"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
-
-        // accessing profile page
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/me")
-                .header("Authorization", "Bearer ${response.accessToken}"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-    }
-
-    @Test
-    @Transactional
-    fun postCurrentUserProfile() {
-        // authenticating
-        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
-                        usernameOrEmail = existingUser.username,
-                        password = existingUser.password)))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andReturn()
-
-        objMapper.registerKotlinModule()
-        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
-        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
-
-
-        // without authorization header
-        mvc.perform(MockMvcRequestBuilders.post("/api/user/me")
-                .content(kz.scope.hiremeserver.controller.asJsonString(UserProfile(
-                        username = existingUser.username,
-                        fullname = existingUser.fullname,
-                        location = "Hidden Leaf Village",
-                        employment = Employment(
-                                position = "hokage",
-                                company = "Kanoha inc."),
-                        current_role = "ninja",
-                        education = Education(
-                                university = "Academy",
-                                graduation_year = 2020,
-                                graduation_month = "June",
-                                major = "Ninja",
-                                degree = "Genin"),
-                        hidden = false,
-                        job_type = "Full-time",
-                        job_field = "Village's Father",
-                        skills = "clones"
-                )))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
-
-        // updating / creating user info
-        mvc.perform(MockMvcRequestBuilders.post("/api/user/me")
-                .header("Authorization", "Bearer ${response.accessToken}")
-                .content(kz.scope.hiremeserver.controller.asJsonString(UserProfile(
-                        username = existingUser.username,
-                        fullname = existingUser.fullname,
-                        location = "Hidden Leaf Village",
-                        employment = Employment(
-                                position = "hokage",
-                                company = "Kanoha inc."),
-                        current_role = "ninja",
-                        education = Education(
-                                university = "Academy",
-                                graduation_year = 2020,
-                                graduation_month = "June",
-                                major = "Ninja",
-                                degree = "Genin"),
-                        hidden = false,
-                        job_type = "Full-time",
-                        job_field = "Village's Father",
-                        skills = "clones"
-                        )))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated)
-    }
-
-    @Test
-    @Transactional
-    fun getCurrentUserProfile() {
-        // authenticating
-        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
-                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
-                        usernameOrEmail = existingUser.username,
-                        password = existingUser.password)))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andReturn()
-
-        objMapper.registerKotlinModule()
-        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
-        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
-
-        // without authorization header
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/me/profile"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
-
-        // accessing own user info
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/me/profile")
-                .header("Authorization", "Bearer ${response.accessToken}"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-    }
-
-    @Test
-    @Transactional
-    fun checkUsernameAvailability() {
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/checkUsernameAvailability?username=kek"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-    }
-
-    @Test
-    @Transactional
-    fun checkEmailAvailability() {
-        mvc.perform(MockMvcRequestBuilders.get("/api/user/checkEmailAvailability?email=kek@nu.edu.kz"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-    }
-
-    @Test
-    @Transactional
-    fun getUserProfile() {
-        // non-existing user
-        mvc.perform(MockMvcRequestBuilders.get("/api/users/johnny_sins"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound)
-
-        // existing user
-        mvc.perform(MockMvcRequestBuilders.get("/api/users/the_7th_hokage"))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-    }
+//    @Test
+//    @Transactional
+//    fun getCurrentUser() {
+//        // signing in
+//        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+//                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+//                        usernameOrEmail = existingUser.username,
+//                        password = existingUser.password)))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//                .andReturn()
+//
+//        objMapper.registerKotlinModule()
+//        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+//        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+//
+//
+//        // without authorization header
+//        mvc.perform(MockMvcRequestBuilders.get("/api/user/me"))
+//                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+//
+//        // accessing profile page
+//        mvc.perform(MockMvcRequestBuilders.get("/api/user/me")
+//                .header("Authorization", "Bearer ${response.accessToken}"))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//    }
+//
+//    @Test
+//    @Transactional
+//    fun postCurrentUserProfile() {
+//        // authenticating
+//        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+//                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+//                        usernameOrEmail = existingUser.username,
+//                        password = existingUser.password)))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//                .andReturn()
+//
+//        objMapper.registerKotlinModule()
+//        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+//        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+//
+//
+//        // without authorization header
+//        mvc.perform(MockMvcRequestBuilders.post("/api/user/me")
+//                .content(kz.scope.hiremeserver.controller.asJsonString(UserProfile(
+//                        username = existingUser.username,
+//                        fullname = existingUser.fullname,
+//                        location = "Hidden Leaf Village",
+//                        employment = Employment(
+//                                position = "hokage",
+//                                company = "Kanoha inc."),
+//                        current_role = "ninja",
+//                        education = Education(
+//                                university = "Academy",
+//                                graduation_year = 2020,
+//                                graduation_month = "June",
+//                                major = "Ninja",
+//                                degree = "Genin"),
+//                        hidden = false,
+//                        job_type = "Full-time",
+//                        job_field = "Village's Father",
+//                        skills = "clones"
+//                )))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+//
+//        // updating / creating user info
+//        mvc.perform(MockMvcRequestBuilders.post("/api/user/me")
+//                .header("Authorization", "Bearer ${response.accessToken}")
+//                .content(kz.scope.hiremeserver.controller.asJsonString(UserProfile(
+//                        username = existingUser.username,
+//                        fullname = existingUser.fullname,
+//                        location = "Hidden Leaf Village",
+//                        employment = Employment(
+//                                position = "hokage",
+//                                company = "Kanoha inc."),
+//                        current_role = "ninja",
+//                        education = Education(
+//                                university = "Academy",
+//                                graduation_year = 2020,
+//                                graduation_month = "June",
+//                                major = "Ninja",
+//                                degree = "Genin"),
+//                        hidden = false,
+//                        job_type = "Full-time",
+//                        job_field = "Village's Father",
+//                        skills = "clones"
+//                        )))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isCreated)
+//    }
+//
+//    @Test
+//    @Transactional
+//    fun getCurrentUserProfile() {
+//        // authenticating
+//        val result = mvc.perform(MockMvcRequestBuilders.post("/api/auth/signin")
+//                .content(kz.scope.hiremeserver.controller.asJsonString(LoginRequest(
+//                        usernameOrEmail = existingUser.username,
+//                        password = existingUser.password)))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//                .andReturn()
+//
+//        objMapper.registerKotlinModule()
+//        val response : JwtAuthenticationResponse = objMapper.readValue(result.response.contentAsString)
+//        Assertions.assertThat(response.accessToken).isNotNull().isNotEmpty()
+//
+//        // without authorization header
+//        mvc.perform(MockMvcRequestBuilders.get("/api/user/me/profile"))
+//                .andExpect(MockMvcResultMatchers.status().isUnauthorized)
+//
+//        // accessing own user info
+//        mvc.perform(MockMvcRequestBuilders.get("/api/user/me/profile")
+//                .header("Authorization", "Bearer ${response.accessToken}"))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//    }
+//
+//    @Test
+//    @Transactional
+//    fun checkUsernameAvailability() {
+//        mvc.perform(MockMvcRequestBuilders.get("/api/user/checkUsernameAvailability?username=kek"))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//    }
+//
+//    @Test
+//    @Transactional
+//    fun checkEmailAvailability() {
+//        mvc.perform(MockMvcRequestBuilders.get("/api/user/checkEmailAvailability?email=kek@nu.edu.kz"))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//    }
+//
+//    @Test
+//    @Transactional
+//    fun getUserProfile() {
+//        // non-existing user
+//        mvc.perform(MockMvcRequestBuilders.get("/api/users/johnny_sins"))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound)
+//
+//        // existing user
+//        mvc.perform(MockMvcRequestBuilders.get("/api/users/the_7th_hokage"))
+//                .andExpect(MockMvcResultMatchers.status().isOk)
+//    }
 }

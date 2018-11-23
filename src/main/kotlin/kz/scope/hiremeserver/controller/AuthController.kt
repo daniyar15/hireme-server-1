@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.time.Instant
+import java.time.Instant.now
 import javax.validation.Valid
 
 /**
@@ -87,7 +88,24 @@ class AuthController {
                 .orElseThrow { AppException("User Role not set.") }
 
         user.roles = setOf(userRole)
-        user.userInfo = UserInfo("", "", "", "", "", 0, "", "", "", false, "", "", "")
+        user.userInfo = UserInfo(
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                now())
 
         userInfoRepository.save(user.userInfo)
         val result = userRepository.save(user)
