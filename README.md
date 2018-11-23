@@ -237,3 +237,12 @@ JobOfferSummary = {
     position
 }
 ```
+
+
+### Logs
+| Method | Path                    | Request                         | Response  | Protected |
+| :----: | :-----------------------| --------------------------------| ----------| :-------: |
+|  GET   | `/logs`                 | ---                             | `[log]`   | Yes       |
+|  GET   | `/logs-by-controller`   | name                            | `[log]`   | Yes       |
+|  GET   | `/logs-by-http-method`  | name                            | `[log]`   | Yes       |
+|  GET   | `/logs-by-protected`    | is_protected                             | `[log]`   | Yes       |              

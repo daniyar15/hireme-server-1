@@ -88,7 +88,6 @@ class UserController {
             user.userInfo.referenceName = userProfile.employment.reference.name
             user.userInfo.referenceNumber = userProfile.employment.reference.number
             user.userInfo.skills = userProfile.skills
-            user.userInfo.createdAt = userProfile.createdAt
             user.userInfo.github = userProfile.urls.github
             user.userInfo.linked_in = userProfile.urls.linked_in
             user.userInfo.web = userProfile.urls.web
