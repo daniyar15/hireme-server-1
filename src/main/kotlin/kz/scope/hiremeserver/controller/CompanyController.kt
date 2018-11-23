@@ -3,7 +3,6 @@ package kz.scope.hiremeserver.controller
 import kz.scope.hiremeserver.exception.ResourceNotFoundException
 import kz.scope.hiremeserver.model.Company
 import kz.scope.hiremeserver.model.EmployerInfo
-import kz.scope.hiremeserver.model.User
 import kz.scope.hiremeserver.payload.*
 import kz.scope.hiremeserver.repository.CompanyRepository
 import kz.scope.hiremeserver.repository.EmployerInfoRepository
@@ -44,9 +43,28 @@ class CompanyController {
         if (companyOptional.isPresent) company = companyOptional.get()
         else throw ResourceNotFoundException("Company", "id", id)
 
-        var companyCreator = CompanyCreator(company.manager.user.username, company.manager.manager_role)
-        return CompanyProfile(company.id, company.name, companyCreator, company.logo,
-                company.location, company.numEmployees, company.specialization, company.description, company.createdAt)
+        val companyCreator = CompanyCreator(
+                company.manager.user.username,
+                company.manager.user.fullname,
+                company.manager.manager_role,
+                company.manager.user.userInfo.linked_in)
+
+        return CompanyProfile(company.id,
+                company.name,
+                company.location,
+                company.specialization,
+                company.numEmployees,
+                company.experience,
+                company.hidden,
+                Urls(
+                        company.github,
+                        company.linked_in,
+                        company.web),
+
+                companyCreator,
+                company.logo,
+                company.description,
+                company.createdAt)
     }
 
     @GetMapping("companies/find")
@@ -58,9 +76,27 @@ class CompanyController {
 
         val companyProfiles: MutableList<CompanyProfile> = ArrayList<CompanyProfile>()
         for (company in companyList) {
-            var companyCreator = CompanyCreator(company.manager.user.username, company.manager.manager_role)
-            companyProfiles.add(CompanyProfile(company.id, company.name, companyCreator, company.logo,
-                    company.location, company.numEmployees, company.specialization, company.description, company.createdAt))
+            val companyCreator = CompanyCreator(
+                    company.manager.user.username,
+                    company.manager.user.fullname,
+                    company.manager.manager_role,
+                    company.manager.user.userInfo.linked_in)
+            companyProfiles.add(CompanyProfile(company.id,
+                    company.name,
+                    company.location,
+                    company.specialization,
+                    company.numEmployees,
+                    company.experience,
+                    company.hidden,
+                    Urls(
+                            company.github,
+                            company.linked_in,
+                            company.web),
+
+                    companyCreator,
+                    company.logo,
+                    company.description,
+                    company.createdAt))
         }
 
         return companyProfiles
@@ -91,28 +127,6 @@ class CompanyController {
                 .buildAndExpand(result.id).toUri()
 
         return ResponseEntity.created(location).body(ApiResponse(true, "Company registered successfully"))
-    }
-
-    @GetMapping("/my-companies")
-    @PreAuthorize("hasRole('USER')")
-    fun getMyCompanies(@CurrentUser currentUser: UserPrincipal) : List<CompanySummary> {
-        val userOptional = userRepository.findById(currentUser.id)
-        val user: User
-        val companies: MutableList<CompanySummary> = ArrayList()
-
-        if (userOptional.isPresent) {
-            user = userOptional.get()
-        } else {
-            throw ResourceNotFoundException("User", "id", currentUser.id)
-        }
-
-        for (employer in user.managing) {
-            companies.add(CompanySummary(
-                    id = employer.company.id,
-                    name = employer.company.name,
-                    description = employer.company.description))
-        }
-        return companies
     }
 
 }

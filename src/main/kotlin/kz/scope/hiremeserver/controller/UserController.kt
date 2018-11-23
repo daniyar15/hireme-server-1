@@ -47,19 +47,22 @@ class UserController {
         } else {
 
             user.userInfo.location = userProfile.location
-            user.userInfo.position = userProfile.employment.position
-            user.userInfo.company = userProfile.employment.company
-            user.userInfo.currentRole = userProfile.current_role
             user.userInfo.university = userProfile.education.university
-            user.userInfo.graduationYear = userProfile.education.graduation_year
-            user.userInfo.graduationMonth = userProfile.education.graduation_month
+            user.userInfo.graduation = userProfile.education.graduation
             user.userInfo.major = userProfile.education.major
             user.userInfo.degree = userProfile.education.degree
             user.userInfo.hidden = userProfile.hidden
-            user.userInfo.jobType = userProfile.job_type
-            user.userInfo.jobField = userProfile.job_field
+            user.userInfo.strongSkillName = userProfile.strong_skill.name
+            user.userInfo.strongSkilldescription = userProfile.strong_skill.description
+            user.userInfo.company = userProfile.employment.company
+            user.userInfo.currentRole = userProfile.employment.role
+            user.userInfo.referenceName = userProfile.employment.reference.name
+            user.userInfo.referenceNumber = userProfile.employment.reference.number
             user.userInfo.skills = userProfile.skills
-
+            user.userInfo.createdAt = userProfile.createdAt
+            user.userInfo.github = userProfile.urls.github
+            user.userInfo.linked_in = userProfile.urls.linked_in
+            user.userInfo.web = userProfile.urls.web
 
             userInfoRepository.save(user.userInfo)
             val result = userRepository.save(user)
@@ -83,20 +86,32 @@ class UserController {
                     user.username,
                     user.fullname,
                     user.userInfo.location,
-                    Employment(
-                            user.userInfo.position,
-                            user.userInfo.company),
-                    user.userInfo.currentRole,
                     Education(
                             user.userInfo.university,
-                            user.userInfo.graduationYear,
-                            user.userInfo.graduationMonth,
+                            user.userInfo.graduation,
                             user.userInfo.major,
                             user.userInfo.degree),
                     user.userInfo.hidden,
-                    user.userInfo.jobType,
-                    user.userInfo.jobField,
-                    user.userInfo.skills)
+                    StrongSkill(
+                            user.userInfo.strongSkillName,
+                            user.userInfo.strongSkilldescription
+                    ),
+                    Urls(
+                            user.userInfo.github,
+                            user.userInfo.linked_in,
+                            user.userInfo.web
+                    ),
+                    user.userInfo.skills,
+                    Employment(
+                            user.userInfo.company,
+                            user.userInfo.currentRole,
+                            Reference(
+                                    user.userInfo.referenceName,
+                                    user.userInfo.referenceNumber
+                            )
+                    ),
+                    user.userInfo.createdAt
+            )
         } else throw ResourceNotFoundException("Profile", "username", currentUser.username)
     }
 
@@ -121,20 +136,32 @@ class UserController {
                     user.username,
                     user.fullname,
                     user.userInfo.location,
-                    Employment(
-                            user.userInfo.position,
-                            user.userInfo.company),
-                    user.userInfo.currentRole,
                     Education(
                             user.userInfo.university,
-                            user.userInfo.graduationYear,
-                            user.userInfo.graduationMonth,
+                            user.userInfo.graduation,
                             user.userInfo.major,
                             user.userInfo.degree),
                     user.userInfo.hidden,
-                    user.userInfo.jobType,
-                    user.userInfo.jobField,
-                    user.userInfo.skills)
+                    StrongSkill(
+                            user.userInfo.strongSkillName,
+                            user.userInfo.strongSkilldescription
+                    ),
+                    Urls(
+                            user.userInfo.github,
+                            user.userInfo.linked_in,
+                            user.userInfo.web
+                    ),
+                    user.userInfo.skills,
+                    Employment(
+                            user.userInfo.company,
+                            user.userInfo.currentRole,
+                            Reference(
+                                    user.userInfo.referenceName,
+                                    user.userInfo.referenceNumber
+                            )
+                    ),
+                    user.userInfo.createdAt
+            )
         } else throw ResourceNotFoundException("Profile", "username", username)
     }
 }
